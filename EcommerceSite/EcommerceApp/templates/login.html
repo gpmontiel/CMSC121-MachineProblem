@@ -1,25 +1,69 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login</title>
+  <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+  <!-- Add Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Yeseva+One&display=swap" rel="stylesheet">
 </head>
+  
 <body>
-    <h1>Login</h1>
-    <form method="post">
-        {% csrf_token %}
-        <div>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
+  
+  <header class="main-header">
+    <div class="header-content">
+      <img src="{% static 'sources/login-image-2.png' %}" alt="Retro-Flower" class="retro-flower">
+      <nav class="navbar">
+        <button class="navbar-btn">
+          <i class="fas fa-arrow-left"></i> Return to Store
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  
+    <div class="login-background">
+      <img src="{% static 'sources/login-image-3.png' %}" alt="Company Logo">
+    </div>
+
+  <div class="login-wrapper">
+    <div class="login-box">
+        <div class="forms-wrap">
+            <div class="logo-container">
+                <img src="{% static 'sources/logo.png' %}" alt="Company Logo" class="site-logo">
+                <h1>RetroPik</h1>
+              </div>
+          <form method="post" class="s">
+            {% csrf_token %}
+    
+            <h3>Log In</h3>
+            <p class="heading-text">Enter your details to get login to your account</p>
+            <div class="actual-form">
+              <div class="input-wrap">
+                <input type="text" id="username" name="username" required class="input-field" placeholder=" " />
+                <label for="username">Username</label>
+              </div>
+              <div class="input-wrap">
+                <input type="password" id="password" name="password" required class="input-field" placeholder=" " />
+                <label for="password">Password</label>
+              </div>
+              <input type="submit" value="Log In" class="login-btn" />
+            </div>
+            <p class="signup-text">Don't have an account? <a href="#">Sign up</a></p>
+          </form>
         </div>
-        <div style="margin-top: 10px;">
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-        </div>
-        <div style="margin-top: 15px;">
-            <input type="submit" value="Login">
-        </div>
-    </form>
+      </div>
+    </div>
+  
+
+  
 </body>
 </html>
