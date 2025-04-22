@@ -1,0 +1,38 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Seller Login</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/seller-login.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Yeseva+One&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="login-box">
+        <img src="{% static 'images/camera-logo.png' %}" alt="Seller Icon" class="login-icon">
+
+        <h2>Admin Login</h2>
+
+        <div class="container">
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="subcontainer">
+                    <label for="username">Username:</label>
+                    <input type="text" name="username" id="username">
+                </div>
+            
+                <div class="subcontainer">
+                    <label for="password">Password:</label>
+                    <input type="password" name="password" id="password">
+                </div>
+            
+                <div class="button-container">
+                    <button type="submit">LOGIN</button>
+                </div>
+            </form>            
+        </div>
+
+    </div>
+</body>
+</html>
