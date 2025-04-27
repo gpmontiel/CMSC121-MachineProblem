@@ -1,0 +1,267 @@
+body {
+    background-color: #272423;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    font-family: 'Cardo', serif;
+}
+
+/* Navbar styling */
+.navbar {
+    padding: 15px 0;
+}
+
+.navbar-brand.logo {
+    display: flex;
+    align-items: center;
+}
+
+.brand-text {
+    font-family: 'Chonburi', serif;
+    font-weight: bold;
+    color: #f5cb5c !important;
+    margin-left: 12px;
+    font-size: 48px; 
+}
+
+.navbar-expand-lg .navbar-nav .nav-link {
+    color: #fff;
+    padding: 8px 15px;
+}
+
+.navbar-nav .nav-item {
+    margin: 0 10px;
+}
+
+.icon-link .fa-solid {
+    font-size: 24px; 
+}
+
+.nav-link:hover, .nav-link:active {
+    color: #f5cb5c !important;
+}
+
+.nav-link:hover .fa-solid, 
+.nav-link:active .fa-solid {
+    transform: scale(1.1);
+    transition: transform 0.2s;
+}
+
+.form-control {
+    background-color: #333533;
+    border: 1px solid #444;
+    color: #fff;
+    font-size: 18px; 
+    height: 45px; 
+}
+
+.form-control::placeholder {
+    color: #aaa;
+}
+
+.search-btn {
+    height: 45px;
+    width: 45px;
+}
+
+.search-btn .fa-solid {
+    font-size: 18px;
+}
+
+.btn-outline-light:hover {
+    background-color: #f5cb5c;
+    border-color: #f5cb5c;
+    color: #272423;
+}
+
+.divider {
+    border-top: 1.5px solid white;
+    margin: 0;
+}
+
+.main-content {
+    min-height: 60vh;
+    padding: 0 30px;
+}
+
+.main-content h1 {
+    font-family: 'Yeseva One', serif;
+    font-size: 48px;
+    color: #f84eab;
+    margin-bottom: 30px;
+    line-height: 1.2;
+}
+
+.card {
+    background-color: #333533;
+    border: none;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.card-title {
+    color: #f5cb5c;
+    font-family: 'Yeseva One', serif;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.card-body {
+    color: #fff;
+    padding: 25px; 
+}
+
+.btn-primary {
+    background-color: #f84eab;
+    border: none;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 12px 20px; 
+}
+
+.btn-primary:hover {
+    background-color: #f5cb5c;
+    color: #272423;
+}
+
+.footer {
+    background-color: #333533;
+    color: white;
+    margin-top: auto;
+}
+
+.footer-logo {
+    display: inline-block;
+}
+
+.copyright-text {
+    font-size: 18px;
+}
+
+.social-icons a {
+    color: #f5cb5c;
+    font-size: 28px; 
+    transition: transform 0.2s;
+}
+
+.social-icons a:hover {
+    color: #f84eab;
+    transform: scale(1.2);
+}
+
+.cart-product-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.cart-img-container {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.product-name {
+    font-size: 30px;
+    font-weight: 600;
+    margin-left: 10px;
+}
+
+.total-text {
+    font-family: 'Cardo', serif;
+    font-size: 30px !important;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+}
+
+.quantity-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: #444;
+    border: none;
+    font-size: 20px;
+}
+
+.quantity-btn:hover {
+    background-color: #c04187;
+    color: #272423;
+}
+
+.compact-remove {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+}
+
+.cart-header-row {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
+    background-color: #444;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #f5cb5c;
+}
+
+.cart-header-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px; 
+}
+
+.cart-item-card {
+    background-color: #333533;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+}
+
+.cart-item-content {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
+    align-items: center;
+}
+
+.cart-product-info {
+    display: flex;
+    align-items: center;
+}
+
+.cart-product-price,
+.cart-product-quantity,
+.cart-product-subtotal,
+.cart-product-remove {
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-item-card:hover {
+    background-color: #e6b458;
+    transition: background-color 0.3s ease;
+}
+
+.empty-text {
+    font-family: 'Cardo', serif;
+    font-size: 40px;
+    font-weight: bold;
+    color: #ffffff;
+    text-align: center;
+    margin-top: 20px;
+}

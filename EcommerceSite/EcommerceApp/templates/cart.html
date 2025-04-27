@@ -1,1 +1,95 @@
-<h1>Cart</h1>
+{% extends 'checkout_cart_base.html' %}
+
+{% block title %}My Cart - RetroPik{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-md-9">
+        <div class="card">
+            <div class="card-body">
+
+                <h5 class="card-title">Your Items</h5>
+
+                {% if cart_items %}
+                    <!-- Header row -->
+                    <div class="cart-header-row">
+                        <div class="cart-header-item">Product</div>
+                        <div class="cart-header-item">Price</div>
+                        <div class="cart-header-item">Quantity</div>
+                        <div class="cart-header-item">Subtotal</div>
+                    </div>
+
+                    <!-- Cart items -->
+                    {% for item in cart_items %}
+                    <div class="cart-item-card">
+                        <div class="cart-item-content">
+                            <div class="cart-product-info">
+                                <div class="cart-img-container">
+                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="cart-product-img">
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="mb-0 product-name">{{ item.product.name }}</h6>
+                                </div>
+                            </div>
+                            <div class="cart-product-price text-center">
+                                ${{ item.product.price }}
+                            </div>
+                            <div class="cart-product-quantity text-center">
+                                <div class="quantity-controls">
+                                    <form action="{% url 'update_cart_item' item.id %}" method="post" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="decrease">
+                                        <button type="submit" class="btn btn-sm btn-dark quantity-btn large-text">-</button>
+                                    </form>
+                                    <span class="mx-2 large-text">{{ item.quantity }}</span>
+                                    <form action="{% url 'update_cart_item' item.id %}" method="post" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="increase">
+                                        <button type="submit" class="btn btn-sm btn-dark quantity-btn large-text">+</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="cart-product-subtotal text-center">
+                                ${{ item.get_subtotal }}
+                            </div>
+
+                            <div class="cart-product-remove text-center">
+                                <form action="{% url 'remove_from_cart' item.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm compact-remove">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="empty-text">Your cart is empty. Continue shopping!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Order Summary</h5>
+                <hr>
+                <div class="d-flex justify-content-between total-text">
+                    <span><strong>Total:</strong></span>
+                    <span><strong>${{ total }}</strong></span>
+                </div>
+                <div class="d-grid gap-2 mt-3">
+                    {% if cart_items %}
+                        <a href="{% url 'checkout' %}" class="btn btn-primary btn-lg">Proceed to Checkout</a>
+                    {% else %}
+                        <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg">Continue Shopping</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
