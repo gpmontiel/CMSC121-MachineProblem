@@ -1,6 +1,8 @@
 {% extends 'checkout_cart_base.html' %}
+{% load static %}
 
 {% block title %}My Cart - RetroPik{% endblock %}
+{% block extra_css %}<link rel="stylesheet" type="text/css" href="{% static 'css/cart.css' %}">{% endblock %} 
 
 {% block content %}
 <div class="row mt-4">
@@ -17,6 +19,7 @@
                         <div class="cart-header-item">Price</div>
                         <div class="cart-header-item">Quantity</div>
                         <div class="cart-header-item">Subtotal</div>
+                        <div class="cart-header-item">Remove</div>
                     </div>
 
                     <!-- Cart items -->
@@ -39,13 +42,13 @@
                                     <form action="{% url 'update_cart_item' item.id %}" method="post" class="d-inline">
                                         {% csrf_token %}
                                         <input type="hidden" name="action" value="decrease">
-                                        <button type="submit" class="btn btn-sm btn-dark quantity-btn large-text">-</button>
+                                        <button type="submit" class="btn btn-sm btn-dark quantity-btn large-text" aria-label="Decrease quantity">-</button>
                                     </form>
                                     <span class="mx-2 large-text">{{ item.quantity }}</span>
                                     <form action="{% url 'update_cart_item' item.id %}" method="post" class="d-inline">
                                         {% csrf_token %}
                                         <input type="hidden" name="action" value="increase">
-                                        <button type="submit" class="btn btn-sm btn-dark quantity-btn large-text">+</button>
+                                        <button type="submit" class="btn btn-sm btn-dark quantity-btn large-text" aria-label="Increase quantity">+</button>
                                     </form>
                                 </div>
                             </div>
@@ -56,7 +59,7 @@
                             <div class="cart-product-remove text-center">
                                 <form action="{% url 'remove_from_cart' item.id %}" method="post">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-danger btn-sm compact-remove">
+                                    <button type="submit" class="btn btn-danger btn-sm compact-remove" aria-label="Remove item">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </form>
@@ -92,4 +95,24 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.compact-remove').forEach(button => {
+    button.addEventListener('click', function(event) {
+        if (!confirm('Are you sure you want to remove this item?')) {
+            event.preventDefault();
+        }
+    });
+});
+
+const checkoutButton = document.querySelector('button[type="submit"][form="checkout-form"]');
+if (checkoutButton) {
+    checkoutButton.addEventListener('click', function() {
+        this.disabled = true;
+        this.innerHTML = 'Processing...';
+    });
+}
+</script>
 {% endblock %}
