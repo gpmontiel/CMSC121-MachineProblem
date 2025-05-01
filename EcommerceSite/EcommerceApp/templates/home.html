@@ -1,0 +1,309 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Your custom CSS -->
+  <link rel="stylesheet" href="{% static 'css/home.css' %}" />
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans&family=Poppins&family=Yeseva+One&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Yellowtail&family=Yeseva+One&family=Young+Serif&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Yellowtail&family=Yeseva+One&family=Young+Serif&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-expand-lg header-nav">
+      <div class="container-fluid">
+        <!-- Toggle button for mobile -->
+        <button class="navbar-toggler" type="button" id="sidebarToggleBtn">
+          <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Brand/logo for mobile -->
+        <div class="header-logo d-lg-none">
+          <img src="{% static 'images/logo.png' %}" alt="Company Logo" class="site-logo">
+          <h1>RetroPik</h1>
+        </div>
+
+        <!-- Desktop Navigation -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+          <div class="header-section left">
+            <ul class="header-menu">
+              <li><a href="#" class="nav-link"><i class="fas fa-home nav-icon"></i><span class="nav-text">Home</span></a></li>
+              <li><a href="#" class="nav-link"><i class="fas fa-search nav-icon"></i><span class="nav-text">Search</span></a></li>
+            </ul>
+          </div>
+
+          <div class="header-section center d-none d-lg-flex">
+            <div class="header-logo">
+              <img src="{% static 'images/logo.png' %}" alt="Company Logo" class="site-logo">
+              <h1>RetroPik</h1>
+            </div>
+          </div>
+
+          <div class="header-section right">
+            <ul class="header-menu">
+              <li><a href="#" class="nav-link icon-only"><span class="icon-circle"><i class="fas fa-shopping-cart"></i></span></a></li>
+              <li><a href="#" class="nav-link icon-only"><span class="icon-circle"><i class="fas fa-user"></i></span></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Mobile Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="header-logo">
+        <img src="{% static 'images/logo.png' %}" alt="Company Logo" class="site-logo">
+        <h1>RetroPik</h1>
+      </div>
+      <button class="sidebar-close" id="sidebarCloseBtn">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <ul class="sidebar-menu">
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Search</a></li>
+      <li><a href="#">Cart</a></li>
+      <li><a href="#">User Profile</a></li>
+    </ul>
+  </div>
+
+  <!-- Overlay for sidebar -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Main Content -->
+  <main class="container mt-4">
+    <!-- Hero Carousel Section -->
+    <div id="carouselExampleIndicators" class="carousel slide hero-carousel" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      </div>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="{% static 'images/home-img-1.jpg' %}" class="d-block w-100" alt="Camera showcase">
+          <div class="carousel-caption">
+            <h1>From Films to Feels</h1>
+            <p>Relive the past and capture new memories with a vintage camera from RetroPik</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img src="{% static 'images/home-img-4.jpg' %}" class="d-block w-100" alt="Vintage collection">
+          <div class="carousel-caption">
+            <h1>Vintage Vibes</h1>
+            <p>Discover our collection of carefully restored film cameras</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img src="{% static 'images/home-img-3.jpg' %}" class="d-block w-100" alt="Classic photography">
+          <div class="carousel-caption">
+            <h1>Analog Excellence</h1>
+            <p>Experience photography the way it was meant to be</p>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+    
+    <!-- Bestsellers Section -->
+    <div class="main-bestseller">
+      <h1 class="bestseller-header">Our Best Sellers</h1>
+    </div>
+
+    <div class="promotion-container" style="background: url('{% static 'images/home-img-7.jpg' %}') no-repeat center center/cover">
+      <div class="row1-container">
+        <div class="box box-down cyan">
+          <div class="promotion-circle"><i class="fas fa-camera-retro"></i></div>
+          <h2>Discover Timeless Cameras</h2>
+          <p>RetroPik is one of the most trusted store for classic photography in the Philippines, offering a curated selection of vintage cameras.</p>
+        </div>
+      
+        <div class="box red">
+          <div class="promotion-circle"><i class="fas fa-gem"></i></div>
+          <h2>A Legacy of Quality</h2>
+          <p>For years, RetroPik has been the go-to shop for photographers and collectors seeking beautifully preserved cameras.</p>
+        </div>
+      
+        <div class="box box-down blue">
+          <div class="promotion-circle"><i class="fas fa-palette"></i></div>
+          <h2>Celebrate the Art</h2>
+          <p>We believe film photography is more than a hobby—it's a timeless craft to be shared with the community.</p>
+        </div>
+      </div>
+      
+      <div class="row2-container">
+        <div class="box orange">
+          <div class="promotion-circle"><i class="fas fa-headset"></i></div>
+          <h2>Great Customer Service</h2>
+          <p>Every item is handpicked, tested, and restored to ensure it meets the highest standards of functionality.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="creator-section">
+      <div class="container">
+        <div class="header-container">
+          <h1 class="creator-header">Meet the Creators</h1>
+          </div>
+          <div class="row justify-content-center">
+              <!-- Card 1 -->
+              <div class="col-lg-4 col-md-6 mb-4">
+                  <div class="card profile-card">
+                      <div class="profile-thumb-block">
+                          <img src="https://randomuser.me/api/portraits/men/78.jpg" alt="profile-image" class="profile" />
+                      </div>
+                      <div class="card-content">
+                          <h2>Nicholas Cifra</h2>
+                          <p>Lead Designer</p>
+                      </div>
+                  </div>
+              </div>
+              
+              <!-- Card 2 -->
+              <div class="col-lg-4 col-md-6 mb-4">
+                  <div class="card profile-card">
+                      <div class="profile-thumb-block">
+                          <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="profile-image" class="profile" />
+                      </div>
+                      <div class="card-content">
+                          <h2>Alyza Gabby Valdez</h2>
+                          <p>Creative Director</p>
+                      </div>
+                  </div>
+              </div>
+              
+              <!-- Card 3 -->
+              <div class="col-lg-4 col-md-6 mb-4">
+                  <div class="card profile-card">
+                      <div class="profile-thumb-block">
+                          <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="profile-image" class="profile" />
+                      </div>
+                      <div class="card-content">
+                          <h2>Gervin Montiel</h2>
+                          <p>Technical Lead</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  </main>
+
+  <!-- About Section -->
+  <div class="about-section">
+    <div class="container">
+      <div class="row align-items-start">
+        <div class="col-lg-5 col-md-12 about-text-col">
+          <div class="about-text-overlay">
+            <div class="about-logo-container">
+              <img src="{% static 'images/logo-2.png' %}" alt="Company Logo" class="about-site-logo">
+              <h2>RetroPik</h2>
+            </div>
+            <p>Looking for that perfect retro camera?</p>
+            <p>RetroPik, based here in Metro Manila, offers a wide selection of vintage film cameras and classic digicams. We're about more than just equipment - we deliver the emotions and memories.</p>
+          </div>
+        </div>
+        <div class="col-lg-7 col-md-12">
+          <div class="row">
+            <div class="col-md-4 col-sm-4 about-col">
+              <h3 class="about-heading">Quick Links</h3>
+              <ul class="about-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Search</a></li>
+                <li><a href="#">Cart</a></li>
+                <li><a href="#">User Profile</a></li>
+              </ul>
+            </div>
+            <div class="col-md-4 col-sm-4 about-col">
+              <h3 class="about-heading">Shop</h3>
+              <ul class="about-links">
+                <li><a href="#">Film Cameras</a></li>
+                <li><a href="#">Accessories</a></li>
+                <li><a href="#">Film Stock</a></li>
+              </ul>
+            </div>
+            <div class="col-md-4 col-sm-4 about-col">
+              <h3 class="about-heading">Support</h3>
+              <ul class="about-links">
+                <li><a href="#">Contact Us</a></li>
+                <li><a href="#">FAQ</a></li>
+                <li><a href="#">Shipping</a></li>
+                <li><a href="#">Returns</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-container">
+        <div class="copyright">
+          <span class="copyright-icon">©</span> 2025 <em>RetroPik</em> From Films to Feels
+        </div>
+        <div class="social-icons">
+          <a href="#" class="social-icon" aria-label="Twitter">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" class="social-icon" aria-label="Instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="#" class="social-icon" aria-label="Facebook">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Sidebar Toggle Script -->
+  <script>
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+    const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    function openSidebar() {
+      sidebar.classList.add('active');
+      sidebarOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove('active');
+      sidebarOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    sidebarToggleBtn.addEventListener('click', openSidebar);
+    sidebarCloseBtn.addEventListener('click', closeSidebar);
+    sidebarOverlay.addEventListener('click', closeSidebar);
+  </script>
+</body>
+</html>
