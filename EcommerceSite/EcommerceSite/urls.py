@@ -21,6 +21,7 @@ from django.urls import path
 from EcommerceApp import views
 
 urlpatterns = [
+    path("", views.home, name="home"),
     path('admin/', admin.site.urls),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('cart/', views.cart, name='cart'),
@@ -36,4 +37,6 @@ urlpatterns = [
     path('products/delete/<int:product_id>', views.delete_product, name='delete-product'),
     path('products/modify/<int:product_id>', views.modify_product, name='modify-product'),
     path('login/', views.login_user, name='login'),
+    path("logout/", views.logout_user, name="logout"),
+    path("register/", views.register_user, name="register"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

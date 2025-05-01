@@ -4,7 +4,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import Product, Cart, CartItem 
-from .forms import ProductForm
+from .forms import ProductForm, CreateUserForm
+
+# Shared views
+def home(request):
+    return render(request, "home.html")
 
 # Helper Functions
 def authenticate_user(request, username, password):
@@ -91,6 +95,29 @@ def login_user(request):
         except Exception as e:
             messages.error(request, f"Login error: {str(e)}")
     return render(request, "login.html")
+
+def register_user(request):
+    if request.user.is_authenticated:
+        return redirect('login')
+
+    form = CreateUserForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get("username")
+            messages.success(request, "Account created successfully for " + username)
+            return redirect("login")
+        else:
+            messages.error(request, "Invalid form submission")
+
+    return render(request, "register.html", {"form": form})
+
+def logout_user(request):
+    try:
+        logout(request)
+    except Exception as e:
+        messages.error(request, f"Logout error: {e}")
+    return redirect('login')
 
 # CART AND CHECKOUT VIEWS
 @login_required
