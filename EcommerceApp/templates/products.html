@@ -1,0 +1,28 @@
+{% extends "home_base.html" %}
+
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Our Products</title>
+    <link rel="stylesheet" href="{% static 'css/products.css' %}">
+</head>
+<body>
+    <h1>Available Products</h1>
+
+    <div class="product-grid">
+        {% for product in products %}
+            <div class="product-card">
+                <a href="{% url 'product_detail' product.id %}">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    <h2>{{ product.name }}</h2>
+                    <p>₱{{ product.price }}</p>
+                    <p>Stock: {{ product.stock }}</p>
+                </a>
+            </div>
+        {% empty %}
+            <p>No products available right now.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>
