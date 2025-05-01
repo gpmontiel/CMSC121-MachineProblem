@@ -115,7 +115,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+<<<<<<< Updated upstream
+STATIC_URL = 'EcommerceApp/static/'
+=======
+STATIC_URL = '/static/'
+
+# Directories where Django will look for static files during development
+STATICFILES_DIRS = [
+    BASE_DIR / 'EcommerceApp' / 'static',  # Location of your static files (EcommerceApp/static)
+]
+
+# Directory where static files will be collected by `collectstatic` (this is typically used for production)
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+>>>>>>> Stashed changes
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
