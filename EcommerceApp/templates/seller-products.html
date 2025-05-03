@@ -1,0 +1,81 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}RetroPik Products{% endblock %}
+{% block page_title %}Manage Your Products{% endblock %}
+
+{% block content %}
+<div class="products-container">
+    <div class="products-header">  
+        <h2><i class="fa-solid fa-hand-holding-heart"></i> Your Products</h2>
+        <a href="{% url 'add-product' %}" class="btn-add"><i class="fa-solid fa-plus"></i> Add Product</a>
+    </div>
+    
+    {% if products %}
+    <div class="product-stack">
+        {% for product in products %}
+        <div class="product-card">
+            <div class="product-content">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                <div class="product-details">
+                    <h3>{{ product.name }}</h3>
+                    <p><b>Price:</b> Php {{ product.price }}</p>
+                    <p><b>Stock:</b> {{ product.stock }}</p>
+                    <p><b>Added:</b> {{ product.created_at|date:"M d, Y" }}</p>
+                    
+                    <span class="toggle-details" onclick="toggleDetails(this)">
+                        ▼ Show Full Details
+                    </span>
+                    
+                    <div class="full-details" style="display: none;">
+                        <div class="detail-section">
+                            <h4>Description</h4>
+                            <p>{{ product.description|linebreaks }}</p>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <h4>Features</h4>
+                            {% if product.features %}
+                                <ul class="features-list">
+                                    {% for feature in product.features.splitlines %}
+                                        <li>{{ feature }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p style="color: #999; font-style: italic;">No features specified</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="product-actions">
+                <a href="{% url 'modify-product' product.id %}" class="btn-modify">
+                    <i class="fa-solid fa-pen-to-square"></i> Modify
+                </a>
+                <a href="{% url 'delete-product' product.id %}" class="btn-delete"
+                    onclick="return confirm('Are you sure you want to delete this product?');">
+                    <i class="fa-solid fa-trash"></i> Delete
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-products">
+        <p><i class="fa-solid fa-box-open"></i> You haven't added any products yet.</p>
+    </div>
+    {% endif %}
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    function toggleDetails(element) {
+        const $toggle = $(element);
+        const $details = $toggle.next('.full-details');
+
+        $details.slideToggle(300, function() {
+            const isVisible = $details.is(':visible');
+            $toggle.text(isVisible ? '▲ Hide Details' : '▼ Show Full Details');
+        })
+    }
+</script>
+{% endblock %}

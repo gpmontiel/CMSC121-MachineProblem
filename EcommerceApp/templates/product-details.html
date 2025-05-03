@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ product.name }} - Product Detail</title>
+    <link rel="stylesheet" href="{% static 'css/product-detail.css' %}">
+    <style>
+        .features-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .features-list {
+            margin: 10px 0 0 20px;
+            padding: 0;
+        }
+        .features-list li {
+            margin-bottom: 8px;
+        }
+        .no-features {
+            color: #999;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ product.name }}</h1>
+    <div class="product-detail">
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        <p><strong>Price:</strong> ₱{{ product.price }}</p>
+        <p><strong>Stock:</strong> {{ product.stock }}</p>
+        <p>{{ product.description }}</p>
+        
+        <!-- Features Section -->
+        <div class="features-section">
+            <h3>Features</h3>
+            {% if product.features %}
+                <ul class="features-list">
+                    {% for feature in product.features.splitlines %}
+                        {% if feature.strip %}
+                            <li>{{ feature.strip }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="no-features">No features specified</p>
+            {% endif %}
+        </div>
+    </div>
+    <a href="{% url 'products' %}">Back to Products</a>
+</body>
+</html>
