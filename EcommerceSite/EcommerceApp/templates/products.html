@@ -1,0 +1,117 @@
+{% extends "home_base.html" %}
+{% load static %}
+
+{% block title %}Our Products{% endblock %}
+
+{% block extra_css %}<link rel="stylesheet" type="text/css" href="{% static 'css/products.css' %}">{% endblock %} 
+
+
+{% block content %}
+    <div class="header-banner">
+        <h1>Find Your Perfect Shot</h1>
+    </div>
+
+    <div class="subtext">
+        <p>Shop our curated collection of cameras, films, and accessories built for life's best moments.</p>
+    </div>
+
+    <div class="products-container">
+        <div class="filter-bar">
+            <form method="GET">
+                <label for="category">Filter by Category:</label>
+                <select name="category" id="category" onchange="this.form.submit()">
+                    <option value="">All Categories</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}" 
+                            {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+    
+            <div class="product-count">
+                <b>{{ product_count }}</b> product{% if product_count != 1 %}s{% endif %} found
+            </div>
+        </div>
+
+        <div class="products-list">
+            {% for product in products %}
+            <div class="product-card">
+                <div class="product-image-container">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                    {% endif %}
+                    <form method="'POST" action="{% url 'add_to_cart' product.id %}">
+                        {% csrf_token %}
+                        <button class="add-to-cart-btn"><i class="fa-regular fa-square-plus"></i> Add to Cart</button>
+                    </form>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">{{ product.name }}</h3>
+                    <div class="product-price">Php {{ product.price }}</div>
+                    <div class="product-category">{{ product.category }}</div>
+                    
+                    <a href="{% url 'product_detail' product.id %}" class="view-details-btn">
+                        <span class="underline-text">View Details</span>
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <p><i class="fa-regular fa-face-dizzy"></i> No products available.</p>
+            {% endfor %}
+        </div>
+
+        <div class="pagination-container">
+            {% if products.has_other_pages %}
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    {% if products.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if selected_category %}category={{ selected_category }}&{% endif %}page={{ products.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </span>
+                    </li>
+                    {% endif %}
+        
+                    {% for num in products.paginator.page_range %}
+                        {% if products.number == num %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ num }}</span>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?{% if selected_category %}category={{ selected_category }}&{% endif %}page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+        
+                    {% if products.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if selected_category %}category={{ selected_category }}&{% endif %}page={{ products.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </span>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+        
+        
+    </div>
+    
+
+{% endblock %}

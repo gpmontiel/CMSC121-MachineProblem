@@ -1,0 +1,161 @@
+{% extends 'home_base.html' %}
+{% load static %}
+
+{% block title %}Checkout - RetroPik{% endblock %}
+{% block extra_css %}<link rel="stylesheet" type="text/css" href="{% static 'css/checkout.css' %}">{% endblock %} 
+{% block page_title %}Checkout{% endblock %}
+
+{% block content %} 
+<div class="container checkout-container my-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="bestseller-header">Checkout</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Left Column - Checkout Form -->
+        <div class="col-md-7">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Shipping & Billing Information</h5>
+                    
+                    <form id="checkout-form" method="post" action="{% url 'checkout' %}">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="fullName" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="fullName" name="fullName" required>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" inputmode="tel" pattern="[0-9]{10}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Address</label>
+                            <input type="text" class="form-control" id="address" name="address" required>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="city" class="form-label">City</label>
+                                <input type="text" class="form-control" id="city" name="city" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="state" class="form-label">State</label>
+                                <input type="text" class="form-control" id="state" name="state" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="zipCode" class="form-label">Zip Code</label>
+                                <input type="text" class="form-control" id="zipCode" name="zipCode" inputmode="numeric" pattern="[0-9]{5}" required>
+                            </div>
+                        </div>
+                        
+                        <h5 class="card-title mt-4">Payment Information</h5>
+                        
+                        <div class="mb-3">
+                            <label for="cardName" class="form-label">Name on Card</label>
+                            <input type="text" class="form-control" id="cardName" name="cardName" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="cardNumber" class="form-label">Card Number</label>
+                            <input type="text" class="form-control" id="cardNumber" name="cardNumber" inputmode="numeric" pattern="[0-9]{16}" required>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="expiryMonth" class="form-label">Expiry Month</label>
+                                <input type="text" class="form-control" id="expiryMonth" name="expiryMonth" inputmode="numeric" pattern="(0[1-9]|1[0-2])" placeholder="MM" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="expiryYear" class="form-label">Expiry Year</label>
+                                <input type="text" class="form-control" id="expiryYear" name="expiryYear" inputmode="numeric" pattern="[0-9]{4}" placeholder="YYYY" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="cvv" class="form-label">CVV</label>
+                                <input type="text" class="form-control" id="cvv" name="cvv" inputmode="numeric" pattern="[0-9]{3,4}" required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Column - Order Summary -->
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Order Summary</h5>
+                    
+                    {% if cart_items %}
+                        <!-- Item list -->
+                        <div class="order-summary-items">
+                            {% for item in cart_items %}
+                            <div class="order-item">
+                                <div class="order-item-details">
+                                    <div class="order-item-image">
+                                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="cart-product-img">
+                                    </div>
+                                    <div class="order-item-info">
+                                        <h6 class="order-item-name">{{ item.product.name }}</h6>
+                                        <div class="order-item-meta">
+                                            <span class="order-item-price">Php {{ item.product.price }} × {{ item.quantity }}</span> 
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="order-item-subtotal">
+                                    Php {{ item.get_subtotal }}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Pricing summary -->
+                        <div class="order-pricing-summary">
+                            <div class="order-pricing-row total">
+                                <span>Total</span>
+                                <span>Php {{ total }}</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Pay now button -->
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" form="checkout-form" class="btn btn-primary btn-lg">Pay Now</button>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-shopping-cart fa-4x mb-3" style="color: #333533;"></i>
+                            <p class="empty-text">Your cart is empty. Add items to proceed!</p>
+                            <div class="d-grid gap-2 mt-3">
+                                <a href="{% url 'thank_you' order.id %}" class="btn btn-primary btn-lg">Continue Shopping</a>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.compact-remove').forEach(button => {
+    button.addEventListener('click', function(event) {
+        if (!confirm('Are you sure you want to remove this item?')) {
+            event.preventDefault();
+        }
+    });
+});
+
+</script>
+{% endblock %}

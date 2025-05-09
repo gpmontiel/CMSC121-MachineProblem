@@ -1,0 +1,169 @@
+{% extends "home_base.html" %}
+{% load static %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/products.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="product-detail-container">
+    <div class="product-top-section">
+        <div class="product-detail-carousel">
+            <div class="product-images-carousel">
+                <div id="carouselExample" class="carousel slide">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <div class="carousel-image-wrapper">
+                                <img src="{{ product.image.url }}" class="d-block w-100" alt="{{ product.name }}">
+                            </div>
+                        </div>
+                        {% for image in product.images.all %}
+                            <div class="carousel-item">
+                                <div class="carousel-image-wrapper">
+                                    <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ product.name }}">
+                                </div>
+                            </div>
+                        {% endfor %}                    
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Next</span>
+                    </button>
+                  </div>
+            </div>
+        </div>
+
+        <div class="product-info">
+            <span class="product-detail-category">{{ product.category }}</span>
+            <h1 class="product-detail-name">{{ product.name }}</h1>
+            <p class="product-detail-price" style="color: #D4A34E";>Php {{ product.price }}</p>
+
+            <div class="tax-stock">
+                <span class="tax-included">Tax included.</span>
+                <span class="in-stock">In stock</span>
+            </div>
+
+            <form method="'POST" action="{% url 'add_to_cart' product.id %}">
+                {% csrf_token %}
+                <button class="add-to-cart">Add to Cart</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="product-bottom-section">
+        <h2>Product Details</h2>
+
+        <div class="product-description-section">
+            <h3>Description</h3>
+            <p>{{ product.description }}</p>
+        </div>
+
+        <div class="product-features-section">
+            <h3>Features</h3>
+            {% if product.features %}
+                <ul class="features-list">
+                    {% for feature in product.features.splitlines %}
+                        {% if feature.strip %}
+                            <li>{{ feature.strip }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="no-features">No features available.</p>
+            {% endif %}
+        </div>
+
+        <div class="additional-info-cards">
+            <div class="info-card">
+                <h2><i class="fa-solid fa-truck"></i> Delivery </h2>
+                <p>We aim to ship your order <b>within 24 hours</b> of cleared payment (excluding weekends and holidays). 
+                    You'll receive a confirmation email with tracking information, and delivery usually takes 24-48 hours. 
+                    All items are insured and sent with delivery confirmation for your peace of mind.</p>
+            </div>
+        
+            <div class="info-card">
+                <h2><i class="fa-solid fa-shield"></i> Warranty</h2>
+                <p>All items come with a six-month warranty, unless otherwise stated, ensuring peace of mind for your purchase. 
+                    For any issues, we're here to help.</p>
+                <p>For more information, see our <a href="#">Terms and Conditions</a> page.</p>
+            </div>
+        
+            <div class="info-card">
+                <h2><i class="fa-solid fa-parachute-box"></i> Returns</h2>
+                <p>We offer a 30-day return policy for unopened products, allowing you to return products for a full refund. 
+                    Your satisfaction is our priority!</p>
+                <p>For more information on our return policy, see our <a href="#">Returns</a> page.</p>
+            </div>
+        </div>        
+    </div>
+
+    <div class="info-box">
+        <hr class="link-line">
+        <div class="info-items">
+            <div class="info-item">
+                <i class="fa-solid fa-truck-fast"></i>
+                <div class="info-text">
+                    <h3>Fast Shipping</h3>
+                    <p>Get your order delivered quickly.</p>
+                </div>
+            </div>
+            <div class="info-item">
+                <i class="fa-solid fa-shield"></i>
+                <div class="info-text">
+                    <h3>6 Months Warranty</h3>
+                    <p>Included in all purchases.</p>
+                </div>
+            </div>
+            <div class="info-item">
+                <i class="fa-solid fa-headset"></i>
+                <div class="info-text">
+                    <h3>Expert Support</h3>
+                    <p>We are here to assist you anytime.</p>
+                </div>
+            </div>
+            <div class="info-item">
+                <i class="fa-solid fa-lock"></i>
+                <div class="info-text">
+                    <h3>Secure Payment</h3>
+                    <p>Your payment is fully protected.</p>
+                </div>
+            </div>
+        </div>
+        <hr class="link-line">
+    </div>
+    
+    <div class="recommended-section">
+        <h2>Products You May Like</h2>
+        <div class="products-list">
+            {% for recommended in recommended_products %}
+                <div class="product-card">
+                    <div class="product-image-container">
+                        {% if recommended.image %}
+                            <img src="{{ recommended.image.url }}" alt="{{ recommended.name }}" class="product-image">
+                        {% endif %}
+                        <button class="add-to-cart-btn">
+                            <i class="fa-regular fa-square-plus"></i> Add to Cart
+                        </button>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">{{ recommended.name }}</h3>
+                        <div class="product-price">Php {{ recommended.price }}</div>
+                        <div class="product-category">{{ recommended.category }}</div>
+                        <a href="{% url 'product_detail' recommended.id %}" class="view-details-btn">
+                            <span class="underline-text">View Details</span>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+     
+
+</div>
+{% endblock %}
