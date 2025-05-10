@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import F, Sum, DecimalField
-from django.db.models.signals import post_save
 
 class AccountProfile(models.Model):
     USER_TYPE_CHOICES = (('buyer', 'Buyer'), ('seller', 'Seller'),)
@@ -67,6 +66,10 @@ class CartItem(models.Model):
         return f"{self.quantity} x {self.product.name}"
     
 class Order(models.Model):
+    STATUS_CHOICES = [('Pending', 'Pending'), ('Processing', 'Processing'),
+                      ('Shipped', 'Shipped'), ('Delivered', 'Delivered'),
+                      ('Completed', 'Completed'), ('Cancelled', 'Cancelled'),]
+
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     order_number = models.CharField(max_length=20, unique=True)
     full_name = models.CharField(max_length=100)
@@ -79,6 +82,7 @@ class Order(models.Model):
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     card_last_four = models.CharField(max_length=4)
     created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
     
     def __str__(self):
         return f"Order {self.order_number}"

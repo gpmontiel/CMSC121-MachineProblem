@@ -17,7 +17,7 @@
             <ul class="navbar">
                 <li><a href="{% url 'dashboard' %}"><i class="fa-solid fa-eye"></i>Overview</a></li>
                 <li><a href="{% url 'seller-products' %}"><i class="fa-solid fa-camera-retro"></i>Products</a></li>
-                <li><a href="#"><i class="fa-solid fa-bell"></i>Orders</a></li>
+                <li><a href="{% url 'order_list' %}"><i class="fa-solid fa-bell"></i>Orders</a></li>
                 <li><a href="{% url 'home' %}"><i class="fa-solid fa-store"></i>Shop Page</a></li>
                 <li><a href="{% url 'seller-logout' %}"><i class="fa-solid fa-right-from-bracket"></i>Log Out</a></li>
             </ul>
@@ -32,22 +32,7 @@
             </div>
 
 
-            {% block content %}
-            <div class="stats-container">
-                <div class="stat-box sales-box">
-                    <h3>Total Sales</h3>
-                    <p>Php {{ total_sales }}</p>
-                </div>
-                <div class="stat-box customers-box">
-                    <h3>Customers</h3>
-                    <p>{{ total_customers }}</p>
-                </div>
-                <div class="stat-box products-box">
-                    <h3>Products</h3>
-                    <p>{{ total_products }}</p>
-                </div>
-            </div>
-            {% endblock %}
+            {% block content %} {% endblock %}
 
         </div>
     </div>

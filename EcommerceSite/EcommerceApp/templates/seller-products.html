@@ -1,7 +1,7 @@
 {% extends 'dashboard_base.html' %}
 
 {% block title %}RetroPik Products{% endblock %}
-{% block page_title %}Manage Your Products{% endblock %}
+{% block page_title %}<span class="sellers-products-title">Manage Your Products</span>{% endblock %}
 
 {% block content %}
 <div class="products-container">
@@ -76,6 +76,30 @@
     </div>
     {% endif %}
 </div>
+
+    <div class="pagination">
+        <span class="page-info">
+            Page {{ products.number }} of {{ products.paginator.num_pages }}
+        </span>
+    
+        <div class="pagination-links">
+            {% if products.has_previous %}
+                <a href="?page={{ products.previous_page_number }}">Previous</a>
+            {% endif %}
+    
+            {% for num in products.paginator.page_range %}
+                {% if products.number == num %}
+                    <span class="current">{{ num }}</span>
+                {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
+                    <a href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+    
+            {% if products.has_next %}
+                <a href="?page={{ products.next_page_number }}">Next</a>
+            {% endif %}
+        </div>
+    </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>

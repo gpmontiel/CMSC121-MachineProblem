@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.http import JsonResponse
-import uuid, random
+import uuid, random, datetime
 
 from .models import *
 from .forms import ProductForm, RegisterForm
@@ -35,9 +35,13 @@ def seller_logout(request):
 
 @login_required
 def dashboard(request):
+    this_month = datetime.datetime.now().month
+
     context = {
-        'total_sales': 152267371,
-        'total_customers': 47121,
+        'total_sales': Order.objects.aggregate(Sum('total_price'))['total_price__sum'] or 0,
+        'monthly_earnings': Order.objects.filter(created_at__month=this_month).aggregate(Sum('total_price'))['total_price__sum'] or 0,
+        'total_orders': Order.objects.count(),
+        'total_customers': Order.objects.values('user').distinct().count(),
         'total_products': Product.objects.count(),
     }
 
@@ -46,6 +50,11 @@ def dashboard(request):
 @login_required
 def products_view(request):
     products = Product.objects.all().order_by('-created_at')
+    paginator = Paginator(products, 5)
+
+    page_number = request.GET.get('page')
+    products = paginator.get_page(page_number)
+
     return render(request, 'seller-products.html', {'products': products})
 
 @login_required
@@ -107,6 +116,42 @@ def delete_product_image(request, image_id):
     image.delete()
 
     return redirect('modify-product', product_id=product_id)
+
+@login_required
+def order_list(request):
+    orders = Order.objects.all()
+    paginator = Paginator(orders, 10)
+
+    page_number = request.GET.get('page')
+    page_object = paginator.get_page(page_number)
+
+    context = {
+        'orders': page_object,  
+        'order_count': orders.count(),
+        'page_object': page_object
+    }
+
+    return render(request,'orders.html', context)
+
+@login_required
+def order_details(request, order_id):
+    try:
+        order = Order.objects.get(id=order_id)
+    except Order.DoesNotExist:
+        print("Image Not Found")
+
+    return render(request,'order-details.html', {'order': order})
+
+@login_required
+def update_order_status(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        if new_status in ['Pending', 'Processing', 'Shipped', 'Delivered', 'Completed', 'Cancelled']:
+            order.status = new_status
+            order.save()
+
+    return redirect('order_details', order_id=order.id)
 
 ##------------------------------- BUYER SIDE -------------------------------##
 ##----------- LOGIN/REGISTER PAGE -----------##
@@ -197,7 +242,6 @@ def add_to_cart(request, product_id):
     if not created:
         cart_item.quantity += 1
         cart_item.save()
-    messages.success(request, f"Added {product.name} to your cart!")
     return redirect('cart')
 
 def update_cart_item(request, item_id):
@@ -226,7 +270,6 @@ def update_cart_item(request, item_id):
 def remove_from_cart(request, item_id):
     cart_item = get_object_or_404(CartItem, id=item_id)
     cart_item.delete()
-    messages.success(request, "Item removed from cart.")
     return redirect('cart')
 
 def checkout(request):
@@ -265,17 +308,25 @@ def checkout(request):
             )
             
             for cart_item in cart_items:
+                product = cart.item.product
+
+                if product.stock < cart_item.quantity:
+                    messages.error(request,f"Not enough stock for {product.name}.")
+                    return redirect('cart')
+
                 OrderItem.objects.create(
                     order=order,
                     product=cart_item.product,
                     quantity=cart_item.quantity,
                     price=cart_item.product.price
                 )
+
+                product.stock -= cart_item.quantity
+                product.save()
             
             cart.items.all().delete()
             return redirect('thank_you', order_id=order.id)
         else:
-            messages.error(request, "Your cart is empty.")
             return redirect('cart')
     
     context = {

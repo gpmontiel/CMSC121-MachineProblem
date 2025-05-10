@@ -1,0 +1,103 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+
+{% block title %}Orders | Order #{{ order.order_number }}{% endblock %}
+{% block page_title %}<span class="orders-title">Order Details</span>{% endblock %}
+
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/orders.css' %}">{% endblock %}
+
+{% block content %}
+<div class="order-detail-card">
+    <div class="order-details-header">
+        <h2 class="order-details-id">Order #{{ order.order_number }}</h2>
+        <p class="order-date"><i class="fa-regular fa-calendar-check"></i> Order Date: {{ order.created_at|date:"F j, Y" }}</p>
+    </div>
+    
+    <hr>
+    
+    <div class="info-section">
+        <div class="customer-info">
+            <h3><i class="fa-regular fa-id-badge"></i> CUSTOMER</h3>
+            <p><b>Name:</b> {{ order.full_name }}</p>
+            <p><b>Email:</b> {{ order.email }}</p>
+            <p><b>Phone:</b> {{ order.phone }}</p>
+        </div>
+        
+        <div class="shipping-info">
+            <h3><i class="fa-solid fa-truck-arrow-right"></i> DELIVER TO</h3>
+            <p><b>Address:</b> {{ order.address }}</p>
+            <p><b>City:</b> {{ order.city }}</p>
+            <p><b>State:</b> {{ order.state }}</p>
+            <p><b>Zip Code:</b> {{ order.zip_code }}</p>
+        </div>
+
+        <div class="status-info">
+            <h3><i class="fa-solid fa-star"></i> STATUS</h3>
+            <form method="post" action="{% url 'update_order_status' order.id %}">
+                {% csrf_token %}
+                <div class="status-dropdown">
+                    <select name="status" onchange="this.form.submit()" class="status-select {% if order.status %}status-{{ order.status|lower }}{% endif %}">
+                        {% for value, label in order.STATUS_CHOICES %}
+                            <option value="{{ value }}" {% if order.status == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <div class="select-arrow">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </form>
+        </div>
+    
+    </div>
+    
+    <hr>
+    
+    <h3 class="products-title"><i class="fa-solid fa-cart-shopping"></i> PRODUCTS ORDERED</h3>
+    <table class="products-ordered-table">
+        <thead>
+            <tr>
+                <th class="product-details-image">Image</th>
+                <th class="product-details-name">Product</th>
+                <th class="product-details-price">Unit Price</th>
+                <th class="product-details-quantity">Quantity</th>
+                <th class="product-details-total">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order.items.all %}
+            <tr>
+                <td class="product-image">
+                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" width="50">
+                </td>
+                <td class="product-details-name">{{ item.product.name }}</td>
+                <td class="product-details-price">Php {{ item.product.price }}</td>
+                <td class="product-details-quantity">{{ item.quantity }}</td>
+                <td class="product-details-total">Php {{ item.get_subtotal }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="order-summary">
+        <div class="summary-row">
+            <span>Subtotal:</span>
+            <span>Php {{ order.total_price }}</span>
+        </div>
+        <div class="summary-row">
+            <span>Shipping Cost:</span>
+            <span>Php 0.00</span>
+        </div>
+        <div class="summary-row grand-total">
+            <span>Grand Total:</span>
+            <span>Php {{ order.total_price }}</span>
+        </div>
+    </div>
+    
+    <div class="action-buttons">
+        <a href="{% url 'order_list' %}" class="back-button">Back to Order List</a>
+    </div>
+</div>
+
+{% endblock %}
