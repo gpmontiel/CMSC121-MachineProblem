@@ -253,8 +253,16 @@ def update_cart_item(request, item_id):
         action = request.POST.get('action')
 
         if action == 'increase':
-            cart_item.quantity += 1
-            cart_item.save()
+            if cart_item.quantity < cart_item.product.stock:
+                cart_item.quantity += 1
+                cart_item.save()
+            else:
+                return JsonResponse({
+                    'quantity': cart_item.quantity,
+                    'max_stock': cart_item.product.stock,
+                    'subtotal': float(cart_item.get_subtotal()),
+                    'total': float(cart_item.cart.get_total())
+                })
         elif action == 'decrease':
             if cart_item.quantity > 1:
                 cart_item.quantity -= 1
@@ -412,9 +420,6 @@ def checkout(request):
     return render(request, 'checkout.html', context)
 
 def thank_you(request, order_id):
-    """
-    Display thank you page after successful checkout
-    """
     try:
         order = Order.objects.get(id=order_id, user=request.user)
     except Order.DoesNotExist:

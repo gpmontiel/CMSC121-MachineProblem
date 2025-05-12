@@ -98,7 +98,7 @@
                                         <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="cart-product-img">
                                     </div>
                                     <div class="ms-3">
-                                        <h6 class="mb-0 product-name">{{ item.product.name }}</h6>
+                                        <a href="{% url 'product_detail' item.product.id %}" class="link-name"><h6 class="mb-0 product-name">{{ item.product.name }}</h6></a>
                                     </div>
                                 </div>
                                 <div class="cart-product-price text-center">
@@ -117,7 +117,9 @@
                                                 class="btn btn-sm quantity-btn large-text ajax-update-btn" 
                                                 data-action="increase" 
                                                 data-item-id="{{ item.id }}" 
-                                                aria-label="Increase quantity">+</button>
+                                                data-max-stock="{{ item.product.stock }}"
+                                                aria-label="Increase quantity"
+                                                {% if item.quantity >= item.product.stock %}disabled{% endif %}>+</button>
                                     </div>
                                 </div>
                                 <div class="cart-product-subtotal text-center">
@@ -240,7 +242,13 @@ document.querySelectorAll('.ajax-update-btn').forEach(button => {
         const itemId = this.dataset.itemId;
         const action = this.dataset.action;
         const currentQty = parseInt(this.dataset.currentQty || 0);
+        const maxStock = parseInt(this.dataset.maxStock || Infinity);
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        if (action === 'increase' && currentQty >= maxStock) {
+            showToast('errorToast', `Maximum stock reached for this product`);
+            return;
+        }
         
         if (action === 'decrease' && currentQty === 1) {
             const confirmToast = document.getElementById('confirmationToast');
@@ -271,10 +279,16 @@ document.querySelectorAll('.ajax-update-btn').forEach(button => {
                 showToast('removalToast', 'Item removed from cart');
             } else {
                 const qtyElement = document.getElementById(`quantity-${itemId}`);
+                const increaseBtn = document.querySelector(`.ajax-update-btn[data-item-id="${itemId}"][data-action="increase"]`);
                 qtyElement.innerText = data.quantity;
-                
-                document.querySelector(`.ajax-update-btn[data-item-id="${itemId}"][data-action="decrease"]`)
-                    .dataset.currentQty = data.quantity;
+
+                increaseBtn.dataset.currentQty = data.quantity;
+                if (data.quantity >= data.max_stock) {
+                    increaseBtn.disabled = true;
+                    showToast('infoToast', `Maximum stock reached for this product`);
+                } else {
+                    increaseBtn.disabled = false;
+                }
                 
                 const subtotalElement = document.getElementById(`subtotal-${itemId}`);
                 subtotalElement.dataset.subtotal = data.subtotal;
