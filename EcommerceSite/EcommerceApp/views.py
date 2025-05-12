@@ -211,7 +211,7 @@ def cart(request):
             return redirect('login') 
     except User.accountprofile.RelatedObjectDoesNotExist:
         return redirect('login')
-    
+
     cart = get_or_create_cart(request)
     cart_items = cart.items.all()
     context = {
@@ -219,6 +219,7 @@ def cart(request):
         'cart_items': cart_items,
         'total': cart.get_total(),
     }
+
     return render(request, 'cart.html', context)
 
 def add_to_cart(request, product_id):
@@ -236,18 +237,21 @@ def add_to_cart(request, product_id):
     cart_item, created = CartItem.objects.get_or_create(
         cart=cart,
         product=product,
-        defaults={'quantity': 1}
+        defaults={'quantity': 1, 'price_at_add': product.price}
     )
 
     if not created:
         cart_item.quantity += 1
         cart_item.save()
+    messages.success(request, f"{product.name} added to your cart")
     return redirect('cart')
 
 def update_cart_item(request, item_id):
     cart_item = get_object_or_404(CartItem, id=item_id)
+
     if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         action = request.POST.get('action')
+
         if action == 'increase':
             cart_item.quantity += 1
             cart_item.save()
@@ -256,30 +260,43 @@ def update_cart_item(request, item_id):
                 cart_item.quantity -= 1
                 cart_item.save()
             else:
+                cart = cart_item.cart
                 cart_item.delete()
-                return JsonResponse({'deleted': True})
+                return JsonResponse({
+                    'deleted': True,
+                    'total': float(cart.get_total())
+                })
         
         cart = cart_item.cart
+        subtotal = cart_item.get_subtotal()
+        total = cart.get_total()
+
         return JsonResponse({
             'quantity': cart_item.quantity,
-            'subtotal': str(cart_item.get_subtotal()),
-            'total': str(cart.get_total())
+            'subtotal': float(subtotal),
+            'total': float(total)
         })
+
     return redirect('cart')
+
 
 def remove_from_cart(request, item_id):
-    cart_item = get_object_or_404(CartItem, id=item_id)
-    cart_item.delete()
+    if request.method == 'POST':
+        cart_item = get_object_or_404(CartItem, id=item_id)
+        product_name = cart_item.product.name
+        cart_item.delete()
+        messages.error(request, f"{product_name} removed from your cart")
     return redirect('cart')
 
+@login_required
 def checkout(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
-    
+    """
+    Handle the checkout process with improved error handling and toast notifications
+    """
     cart = get_or_create_cart(request)
     cart_items = cart.items.all()
     total = cart.get_total()
-    
+   
     if request.method == 'POST':
         full_name = request.POST.get('fullName')
         email = request.POST.get('email')
@@ -290,9 +307,51 @@ def checkout(request):
         zip_code = request.POST.get('zipCode')
         card_name = request.POST.get('cardName')
         card_number = request.POST.get('cardNumber')
-        card_last_four = card_number[-4:] if card_number else "0000"
+
+        validation_errors = []
+        if not full_name:
+            validation_errors.append('Full name is required')
+        if not email:
+            validation_errors.append('Email is required')
+        if not phone:
+            validation_errors.append('Phone number is required')
+        elif not phone.isdigit() or len(phone) != 10:
+            validation_errors.append('Please enter a valid 10-digit phone number')
+        if not address:
+            validation_errors.append('Address is required')
+        if not city:
+            validation_errors.append('City is required')
+        if not state:
+            validation_errors.append('State is required')
+        if not zip_code:
+            validation_errors.append('Zip code is required')
+        elif not zip_code.isdigit() or len(zip_code) != 5:
+            validation_errors.append('Please enter a valid 5-digit zip code')
+        if not card_name:
+            validation_errors.append('Name on card is required')
+        if not card_number:
+            validation_errors.append('Card number is required')
+        elif not card_number.isdigit() or len(card_number) != 16:
+            validation_errors.append('Please enter a valid 16-digit card number')
         
-        if cart_items:
+        if validation_errors:
+            for error in validation_errors:
+                messages.error(request, error)
+            return render(request, 'checkout.html', {
+                'cart': cart,
+                'cart_items': cart_items,
+                'total': total,
+            })
+        
+
+        if not cart_items:
+            messages.warning(request, 'Your cart is empty. Please add items before checking out.')
+            return redirect('cart')
+        
+
+        try:
+            card_last_four = card_number[-4:] if card_number else "0000"
+            
             order = Order.objects.create(
                 user=request.user,
                 order_number=str(uuid.uuid4().hex)[:10].upper(),
@@ -307,28 +366,44 @@ def checkout(request):
                 card_last_four=card_last_four
             )
             
+
+            out_of_stock_items = []
             for cart_item in cart_items:
-                product = cart.item.product
-
+                product = cart_item.product
                 if product.stock < cart_item.quantity:
-                    messages.error(request,f"Not enough stock for {product.name}.")
-                    return redirect('cart')
-
+                    out_of_stock_items.append(f"{product.name} (requested: {cart_item.quantity}, available: {product.stock})")
+                    continue
+                
                 OrderItem.objects.create(
                     order=order,
-                    product=cart_item.product,
+                    product=product,
                     quantity=cart_item.quantity,
-                    price=cart_item.product.price
+                    price=product.price
                 )
+                
 
                 product.stock -= cart_item.quantity
                 product.save()
             
+
+            if out_of_stock_items:
+                order.delete()
+                for item in out_of_stock_items:
+                    messages.error(request, f"Not enough stock for {item}")
+                return redirect('cart')
+            
             cart.items.all().delete()
+            messages.success(request, f"Order #{order.order_number} has been placed successfully!")
             return redirect('thank_you', order_id=order.id)
-        else:
-            return redirect('cart')
-    
+            
+        except Exception as e:
+            messages.error(request, f"An error occurred while processing your order: {str(e)}")
+            return render(request, 'checkout.html', {
+                'cart': cart,
+                'cart_items': cart_items,
+                'total': total,
+            })
+   
     context = {
         'cart': cart,
         'cart_items': cart_items,
@@ -337,19 +412,32 @@ def checkout(request):
     return render(request, 'checkout.html', context)
 
 def thank_you(request, order_id):
+    """
+    Display thank you page after successful checkout
+    """
     try:
-        order = Order.objects.get(id=order_id)
+        order = Order.objects.get(id=order_id, user=request.user)
     except Order.DoesNotExist:
+        messages.error(request, "Order not found or you don't have permission to view it.")
         order = None
-        
+        return redirect('home')
+       
     context = {
         'order': order,
     }
     return render(request, 'thank-you.html', context)
 
-# HELPER FUNCTION
 def get_or_create_cart(request):
-    cart, created = Cart.objects.get_or_create(user=request.user)
+    if request.user.is_authenticated:
+        cart, created = Cart.objects.get_or_create(user=request.user)
+    else:
+        session_id = request.session.session_key
+        if not session_id:
+            request.session.create()
+            session_id = request.session.session_key
+
+        cart, created = Cart.objects.get_or_create(session_id=session_id, user=None)
+    
     return cart
 
 ##----------- PRODUCTS PAGE -----------##

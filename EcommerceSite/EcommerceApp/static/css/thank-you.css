@@ -104,17 +104,20 @@
 }
 
 .item-image {
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
     overflow: hidden;
     border-radius: 8px;
     margin-right: 15px;
+    display: flex;          
+    justify-content: center; 
+    align-items: center;
 }
 
 .item-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .item-name {

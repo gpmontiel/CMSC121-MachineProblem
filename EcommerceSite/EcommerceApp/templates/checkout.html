@@ -2,9 +2,14 @@
 {% load static %}
 
 {% block title %}Checkout - RetroPik{% endblock %}
-{% block extra_css %}<link rel="stylesheet" type="text/css" href="{% static 'css/checkout.css' %}">{% endblock %} 
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/checkout.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+{% endblock %} 
 {% block page_title %}Checkout{% endblock %}
 
+{# Main content block #}
 {% block content %} 
 <div class="container checkout-container my-5">
     <div class="row mb-4">
@@ -13,76 +18,111 @@
         </div>
     </div>
 
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1200">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="toast align-items-center text-white bg-{{ message.tags }} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            {{ message }}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
     <div class="row">
-        <!-- Left Column - Checkout Form -->
         <div class="col-md-7">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Shipping & Billing Information</h5>
                     
-                    <form id="checkout-form" method="post" action="{% url 'checkout' %}">
+
+                    <form id="checkout-form" method="post" action="{% url 'checkout' %}" novalidate>
                         {% csrf_token %}
                         
                         <div class="mb-3">
                             <label for="fullName" class="form-label">Full Name</label>
                             <input type="text" class="form-control" id="fullName" name="fullName" required>
+                            <div class="invalid-feedback">Please enter your full name.</div>
                         </div>
                         
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="email" class="form-label">Email Address</label>
                                 <input type="email" class="form-control" id="email" name="email" required>
+                                <div class="invalid-feedback">Please enter a valid email address.</div>
                             </div>
                             <div class="col-md-6">
                                 <label for="phone" class="form-label">Phone Number</label>
                                 <input type="tel" class="form-control" id="phone" name="phone" inputmode="tel" pattern="[0-9]{10}" required>
+                                <div class="invalid-feedback">Please enter a valid 10-digit phone number.</div>
                             </div>
                         </div>
                         
+                        <!-- Address field -->
                         <div class="mb-3">
                             <label for="address" class="form-label">Address</label>
                             <input type="text" class="form-control" id="address" name="address" required>
+                            <div class="invalid-feedback">Please enter your address.</div>
                         </div>
                         
+                        <!-- City, State, Zip fields in a single row -->
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="city" class="form-label">City</label>
                                 <input type="text" class="form-control" id="city" name="city" required>
+                                <div class="invalid-feedback">Please enter your city.</div>
                             </div>
+
                             <div class="col-md-3">
                                 <label for="state" class="form-label">State</label>
                                 <input type="text" class="form-control" id="state" name="state" required>
+                                <div class="invalid-feedback">Please enter your state.</div>
                             </div>
+
                             <div class="col-md-3">
                                 <label for="zipCode" class="form-label">Zip Code</label>
                                 <input type="text" class="form-control" id="zipCode" name="zipCode" inputmode="numeric" pattern="[0-9]{5}" required>
+                                <div class="invalid-feedback">Please enter a valid 5-digit zip code.</div>
                             </div>
                         </div>
                         
+                        <!-- Payment Information section -->
                         <h5 class="card-title mt-4">Payment Information</h5>
                         
+                        <!-- Name on Card field -->
                         <div class="mb-3">
                             <label for="cardName" class="form-label">Name on Card</label>
                             <input type="text" class="form-control" id="cardName" name="cardName" required>
+                            <div class="invalid-feedback">Please enter the name as it appears on your card.</div>
                         </div>
                         
+                        <!-- Card Number field with pattern validation for 16 digits -->
                         <div class="mb-3">
                             <label for="cardNumber" class="form-label">Card Number</label>
                             <input type="text" class="form-control" id="cardNumber" name="cardNumber" inputmode="numeric" pattern="[0-9]{16}" required>
+                            <div class="invalid-feedback">Please enter a valid 16-digit card number.</div>
                         </div>
                         
+                        <!-- Card Expiry and CVV fields in a single row -->
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label for="expiryMonth" class="form-label">Expiry Month</label>
                                 <input type="text" class="form-control" id="expiryMonth" name="expiryMonth" inputmode="numeric" pattern="(0[1-9]|1[0-2])" placeholder="MM" required>
+                                <div class="invalid-feedback">Please enter a valid month (01-12).</div>
                             </div>
                             <div class="col-md-4">
                                 <label for="expiryYear" class="form-label">Expiry Year</label>
                                 <input type="text" class="form-control" id="expiryYear" name="expiryYear" inputmode="numeric" pattern="[0-9]{4}" placeholder="YYYY" required>
+                                <div class="invalid-feedback">Please enter a valid 4-digit year.</div>
                             </div>
                             <div class="col-md-4">
                                 <label for="cvv" class="form-label">CVV</label>
                                 <input type="text" class="form-control" id="cvv" name="cvv" inputmode="numeric" pattern="[0-9]{3,4}" required>
+                                <div class="invalid-feedback">Please enter a valid CVV (3-4 digits).</div>
                             </div>
                         </div>
                     </form>
@@ -90,21 +130,21 @@
             </div>
         </div>
         
-        <!-- Right Column - Order Summary -->
         <div class="col-md-5">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Order Summary</h5>
                     
                     {% if cart_items %}
-                        <!-- Item list -->
-                        <div class="order-summary-items">
+                        <div class="order-summary-items scrollable-items">
                             {% for item in cart_items %}
                             <div class="order-item">
                                 <div class="order-item-details">
+                                    <!-- Product image -->
                                     <div class="order-item-image">
                                         <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="cart-product-img">
                                     </div>
+                                    <!-- Product name and price information -->
                                     <div class="order-item-info">
                                         <h6 class="order-item-name">{{ item.product.name }}</h6>
                                         <div class="order-item-meta">
@@ -112,6 +152,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- Product subtotal (price × quantity) -->
                                 <div class="order-item-subtotal">
                                     Php {{ item.get_subtotal }}
                                 </div>
@@ -119,7 +160,7 @@
                             {% endfor %}
                         </div>
                         
-                        <!-- Pricing summary -->
+                        <!-- Pricing summary - shows order total -->
                         <div class="order-pricing-summary">
                             <div class="order-pricing-row total">
                                 <span>Total</span>
@@ -127,14 +168,16 @@
                             </div>
                         </div>
                         
-                        <!-- Pay now button -->
+                        <!-- Pay now button - submits the checkout form -->
                         <div class="d-grid gap-2 mt-4">
                             <button type="submit" form="checkout-form" class="btn btn-primary btn-lg">Pay Now</button>
                         </div>
                     {% else %}
+                        <!-- Empty cart message -->
                         <div class="text-center py-5">
                             <i class="fas fa-shopping-cart fa-4x mb-3" style="color: #333533;"></i>
                             <p class="empty-text">Your cart is empty. Add items to proceed!</p>
+                            <!-- Continue shopping button -->
                             <div class="d-grid gap-2 mt-3">
                                 <a href="{% url 'thank_you' order.id %}" class="btn btn-primary btn-lg">Continue Shopping</a>
                             </div>
@@ -148,7 +191,123 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script>
+// Configure Toastr notification settings
+toastr.options = {
+    "closeButton": true,    
+    "debug": false,         
+    "newestOnTop": true,  
+    "progressBar": true,  
+    "positionClass": "toast-top-right",
+    "preventDuplicates": false,
+    "onclick": null,      
+    "showDuration": "300",  
+    "hideDuration": "1000", 
+    "timeOut": "5000",      
+    "extendedTimeOut": "1000", 
+    "showEasing": "swing",  
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",  
+    "hideMethod": "fadeOut" 
+};
+
+{% if messages %}
+    {% for message in messages %}
+        {% if message.tags == 'error' %}
+            toastr.error('{{ message }}');
+        {% elif message.tags == 'warning' %}
+            toastr.warning('{{ message }}');
+        {% elif message.tags == 'success' %}
+            toastr.success('{{ message }}');
+        {% else %}
+            toastr.info('{{ message }}');
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+(function() {
+    'use strict';
+    var form = document.getElementById('checkout-form');
+    const fields = form.querySelectorAll('input[required], select[required], textarea[required]');
+    fields.forEach(field => {
+        field.addEventListener('blur', function() {
+            validateField(field);
+        });
+        
+        // Validate on input change
+        field.addEventListener('input', function() {
+            if (field.classList.contains('is-invalid')) {
+                validateField(field);
+            }
+        });
+    });
+    
+    // Function to validate individual fields
+    function validateField(field) {
+        if (!field.validity.valid) {
+            field.classList.add('is-invalid');
+            field.classList.remove('is-valid');
+            
+            let errorMessage = field.nextElementSibling.textContent || 
+                               'Please check this field';
+        } else {
+            field.classList.remove('is-invalid');
+            field.classList.add('is-valid');
+        }
+    }
+    
+    form.addEventListener('submit', function(event) {
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            toastr.error('Please check the form for errors and try again.');
+            const invalidFields = form.querySelectorAll(':invalid');
+            let errorMessages = [];
+            
+            invalidFields.forEach(field => {
+                field.classList.add('is-invalid');
+                
+                let fieldName = field.previousElementSibling ? 
+                                field.previousElementSibling.textContent : 
+                                field.getAttribute('name') || 'This field';
+                                
+                let errorMessage = '';
+                if (field.validity.valueMissing) {
+                    errorMessage = `${fieldName} is required`;
+                } else if (field.validity.patternMismatch) {
+                    errorMessage = `Please enter a valid ${fieldName.toLowerCase()}`;
+                } else if (field.validity.typeMismatch) {
+                    errorMessage = `Please enter a valid ${field.type}`;
+                } else {
+                    errorMessage = field.nextElementSibling?.textContent || 
+                                  `Invalid ${fieldName.toLowerCase()}`;
+                }
+                
+                errorMessages.push(errorMessage);
+            });
+            
+            const maxErrorsToShow = 3;
+            for (let i = 0; i < Math.min(errorMessages.length, maxErrorsToShow); i++) {
+                toastr.error(errorMessages[i]);
+            }
+            
+            if (errorMessages.length > maxErrorsToShow) {
+                toastr.error(`And ${errorMessages.length - maxErrorsToShow} more errors. Please check all fields.`);
+            }
+        
+            if (invalidFields.length > 0) {
+                invalidFields[0].focus();
+            }
+        }
+        
+        form.classList.add('was-validated');
+    }, false);
+})();
+
+// Remove item confirmation - shows confirmation dialog when removing items
 document.querySelectorAll('.compact-remove').forEach(button => {
     button.addEventListener('click', function(event) {
         if (!confirm('Are you sure you want to remove this item?')) {
@@ -156,6 +315,5 @@ document.querySelectorAll('.compact-remove').forEach(button => {
         }
     });
 });
-
 </script>
 {% endblock %}

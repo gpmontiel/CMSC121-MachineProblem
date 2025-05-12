@@ -6,6 +6,69 @@
 
 {% block content %}
 <div class="container my-5 pb-5">
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <!-- Success Toast -->
+        <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                                {{ message }}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+        
+        <!-- Error Toast -->
+        <div id="errorToast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                                {{ message }}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+        
+        <!-- Info Toast -->
+        <div id="infoToast" class="toast align-items-center text-dark bg-light border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+                                {{ message }}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+        
+        <!-- Confirmation Toast -->
+        <div id="confirmationToast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    Are you sure you want to remove this item?
+                </div>
+                <div class="ms-auto p-2 d-flex">
+                    <button type="button" id="confirmRemoveBtn" class="btn btn-sm btn-light me-2">Yes</button>
+                    <button type="button" class="btn btn-sm btn-dark" data-bs-dismiss="toast">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row mb-4">
         <div class="col-12">
             <h1 class="bestseller-header">Shopping Cart</h1>
@@ -47,6 +110,7 @@
                                                 class="btn btn-sm quantity-btn large-text ajax-update-btn" 
                                                 data-action="decrease" 
                                                 data-item-id="{{ item.id }}" 
+                                                data-current-qty="{{ item.quantity }}"
                                                 aria-label="Decrease quantity">-</button>
                                             <span class="mx-2 large-text" id="quantity-{{ item.id }}">{{ item.quantity }}</span>
                                             <button 
@@ -57,13 +121,13 @@
                                     </div>
                                 </div>
                                 <div class="cart-product-subtotal text-center">
-                                    Php <span id="subtotal-{{ item.id }}">{{ item.get_subtotal }}</span>
+                                    Php <span id="subtotal-{{ item.id }}" data-subtotal="{{ item.get_subtotal }}">{{ item.get_subtotal }}</span>
                                 </div>
 
                                 <div class="cart-product-remove text-center">
-                                    <form action="{% url 'remove_from_cart' item.id %}" method="post">
+                                    <form id="remove-form-{{ item.id }}" action="{% url 'remove_from_cart' item.id %}" method="post">
                                         {% csrf_token %}
-                                        <button type="submit" class="btn btn-danger btn-sm compact-remove" aria-label="Remove item">
+                                        <button type="button" class="btn btn-danger btn-sm compact-remove" data-item-id="{{ item.id }}" aria-label="Remove item">
                                             <i class="fa-solid fa-trash"></i>
                                         </button>
                                     </form>
@@ -103,15 +167,63 @@
         </div>
     </div>
 </div>
+
 {% endblock %}
 
 {% block extra_js %}
 <script>
+function formatNumberWithCommas(number) {
+    let numValue;
+    if (typeof number === 'string') {
+        numValue = parseFloat(number.replace(/,/g, ''));
+    } else {
+        numValue = parseFloat(number);
+    }
+    
+    if (isNaN(numValue)) {
+        return "0.00";
+    }
+    
+    return numValue.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+function getRawValue(formattedStr) {
+    if (!formattedStr) return 0;
+    return parseFloat(formattedStr.replace(/,/g, '')) || 0;
+}
+
+function showToast(toastId, message = null) {
+    const toastElement = document.getElementById(toastId);
+    const toastBody = toastElement.querySelector('.toast-body');
+    
+    if (message && toastBody.textContent.trim() === '') {
+        toastBody.textContent = message;
+    }
+    
+    if (toastBody.textContent.trim() !== '') {
+        const toast = new bootstrap.Toast(toastElement, {
+            autohide: true,
+            delay: 3000
+        });
+        toast.show();
+    }
+}
+
 document.querySelectorAll('.compact-remove').forEach(button => {
-    button.addEventListener('click', function(event) {
-        if (!confirm('Are you sure you want to remove this item?')) {
-            event.preventDefault();
-        }
+    button.addEventListener('click', function() {
+        const itemId = this.dataset.itemId;
+        const confirmToast = document.getElementById('confirmationToast');
+        const confirmBtn = document.getElementById('confirmRemoveBtn');
+        
+        confirmBtn.onclick = function() {
+            document.getElementById(`remove-form-${itemId}`).submit();
+        };
+        
+        const toast = new bootstrap.Toast(confirmToast);
+        toast.show();
     });
 });
 
@@ -127,7 +239,21 @@ document.querySelectorAll('.ajax-update-btn').forEach(button => {
     button.addEventListener('click', function () {
         const itemId = this.dataset.itemId;
         const action = this.dataset.action;
+        const currentQty = parseInt(this.dataset.currentQty || 0);
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        if (action === 'decrease' && currentQty === 1) {
+            const confirmToast = document.getElementById('confirmationToast');
+            const confirmBtn = document.getElementById('confirmRemoveBtn');
+            
+            confirmBtn.onclick = function() {
+                document.getElementById(`remove-form-${itemId}`).submit();
+            };
+            
+            const toast = new bootstrap.Toast(confirmToast);
+            toast.show();
+            return;
+        }
 
         fetch(`/update-cart-item/${itemId}/`, {
             method: 'POST',
@@ -142,14 +268,71 @@ document.querySelectorAll('.ajax-update-btn').forEach(button => {
         .then(data => {
             if (data.deleted) {
                 document.getElementById(`quantity-${itemId}`).closest('.cart-item-card').remove();
+                showToast('removalToast', 'Item removed from cart');
             } else {
-                document.getElementById(`quantity-${itemId}`).innerText = data.quantity;
-                document.getElementById(`subtotal-${itemId}`).innerText = data.subtotal;
+                const qtyElement = document.getElementById(`quantity-${itemId}`);
+                qtyElement.innerText = data.quantity;
+                
+                document.querySelector(`.ajax-update-btn[data-item-id="${itemId}"][data-action="decrease"]`)
+                    .dataset.currentQty = data.quantity;
+                
+                const subtotalElement = document.getElementById(`subtotal-${itemId}`);
+                subtotalElement.dataset.subtotal = data.subtotal;
+                subtotalElement.innerText = formatNumberWithCommas(data.subtotal);
+                
+                showToast('successToast', 'Cart updated successfully');
             }
-            document.getElementById('cart-total').innerText = data.total;
+            
+            if (data.total !== undefined) {
+                const cartTotal = document.getElementById('cart-total');
+                cartTotal.dataset.total = data.total;
+                cartTotal.innerText = formatNumberWithCommas(data.total);
+            } else {
+                const cartTotal = document.getElementById('cart-total');
+                cartTotal.dataset.total = 0;
+                cartTotal.innerText = "0.00";
+            }
+        })
+        .catch(error => {
+            showToast('errorToast', 'Error updating cart');
+            console.error('Error:', error);
         });
     });
 });
 
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('[id^="subtotal-"]').forEach(element => {
+        let rawValue;
+        if (element.dataset.subtotal) {
+            rawValue = element.dataset.subtotal;
+        } else {
+            rawValue = getRawValue(element.innerText);
+            element.dataset.subtotal = rawValue;
+        }
+        
+        element.innerText = formatNumberWithCommas(rawValue);
+    });
+    const cartTotal = document.getElementById('cart-total');
+    if (cartTotal) {
+        if (!cartTotal.dataset.total) {
+            cartTotal.dataset.total = getRawValue(cartTotal.innerText);
+        }
+        
+        cartTotal.innerText = formatNumberWithCommas(cartTotal.dataset.total);
+    }
+    
+    ['successToast', 'errorToast', 'infoToast'].forEach(toastId => {
+        const toastElement = document.getElementById(toastId);
+        const toastBody = toastElement.querySelector('.toast-body');
+        
+        if (toastBody.textContent.trim() !== '') {
+            const toast = new bootstrap.Toast(toastElement, {
+                autohide: true,
+                delay: 3000
+            });
+            toast.show();
+        }
+    });
+});
 </script>
 {% endblock %}
