@@ -199,7 +199,12 @@ def logout_user(request):
 
 ##----------- HOME PAGE -----------##
 def home(request):
-    return render(request, 'home.html')
+    all_products = list(Product.objects.all())
+    featured_products = random.sample(all_products, min(4, len(all_products))) if all_products else []
+    
+    return render(request, 'home.html', {
+        'featured_products': featured_products
+    })
 
 ##----------- CART & CHECKOUT PAGE -----------##
 def cart(request):

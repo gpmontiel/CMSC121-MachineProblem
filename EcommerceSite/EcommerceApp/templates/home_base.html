@@ -40,6 +40,7 @@
                   <span class="nav-text">Search</span>
                 </a>
               </li>
+              <li><a href="{% url 'products' %}" class="nav-link"><i class="fas fa-camera nav-icon"></i><span class="nav-text">Products</span></a></li>
             </ul>
           </div>
 
@@ -95,6 +96,7 @@
     <ul class="sidebar-menu">
       <li><a href="{% url 'home' %}">Home</a></li>
       <li><a href="{% url 'search' %}">Search</a></li>
+      <li><a href="{% url 'products' %}">Products</a></li>
       <li><a href="{% url 'cart' %}">Cart</a></li>
       <li><a href="{% url 'login' %}">User Login</a></li>
     </ul>
@@ -112,7 +114,7 @@
         <div class="col-lg-5 col-md-12 about-text-col">
           <div class="about-text-overlay">
             <div class="about-logo-container">
-              <img src="{% static 'images/logo-2.png' %}" alt="Company Logo" class="about-site-logo">
+              <img src="{% static 'images/logo.png' %}" alt="Company Logo" class="about-site-logo">
               <h2>RetroPik</h2>
             </div>
             <p>Looking for that perfect retro camera?</p>

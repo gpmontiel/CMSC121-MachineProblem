@@ -1,3 +1,69 @@
+/* Animation Keyframes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.layout-container,
+.background-img,
+.main-container,
+.header-logo,
+.main-header a,
+.register-section h1,
+.register-section p,
+.signup-form,
+.signup-form p {
+    opacity: 0; 
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -14,11 +80,15 @@ html, body {
     font-size: 1.2rem;
 }
 
+
 .layout-container {
     display: flex;
     width: 100%;
     height: 100vh;
     flex-direction: row; 
+    opacity: 0;
+    animation: fadeIn 0.3s ease-out forwards;
+    background-color: #F9F7F3;
 }
 
 .background-img {
@@ -26,13 +96,16 @@ html, body {
     height: 100%;
     overflow: hidden;
     position: relative;
+    background-color: #F9F7F3;
+
 }
 
 .background-img img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: left center;
+    object-position: left bottom;
+    background-color: #F9F7F3;
 }
 
 .main-container {
@@ -48,7 +121,7 @@ html, body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 4.5%;
+    padding: 10px 4.5% 0px;
 }
 
 .header-logo {
@@ -58,11 +131,11 @@ html, body {
 }
 
 .header-logo h1 {
-    font-family: 'Young Serif', serif;
+    font-family: 'Yeseva One', serif;
     font-weight: bold;
     margin: 0 0 0 10px;
     color: #1f170c;
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     letter-spacing: 0.5px;
 }
 
@@ -70,40 +143,72 @@ html, body {
     object-fit: contain;
     display: block;
     margin: auto 0;
-    width: 60px;
-    height: 60px;
+    width:70px;
+    height:70px;
     transition: transform 0.3s ease;
 }
 
 .main-header a {
-    text-decoration: underline;
+    text-decoration: none;
     font-size: 0.8rem;
-    color: #1f170c;
+    color: #c25454;
+    position: relative;
+    transition: color 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+.return-link i {
+  margin-right: 8px; 
+}
+
+.main-header a::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: #c25454;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+}
+
+.main-header a:hover {
+    color: #c25454;
+}
+
+.main-header a:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
 }
 
 .register-section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     flex-grow: 1;
     padding: 0 20px;
     text-align: center;
     max-width: 85%;
     margin: 0 auto;
     width: 100%;
+    margin-top: 5px;
 }
 
 .register-section h1 {
-    font-family: 'Young Serif', serif;
-    font-size: 2.8rem;
+    font-family: 'Poppins', serif;
+    font-size: 2rem;
     margin-bottom: 1rem;
+    font-weight: bold;
 }
 
 .register-section p {
     font-size: 0.8rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     color: #666;
+    font-family: 'Poppins', sans-serif;
 }
 
 .signup-form {
@@ -114,56 +219,153 @@ html, body {
     max-width: 750px;
 }
 
-.signup-form input {
-    padding: 8px 20px;
-    border: 2px solid #e2e2e2;
-    border-radius: 999px;
-    background-color: transparent;
-    font-size: 0.95rem;
-    color: #333;
+.form-box {
     width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
 }
 
-.signup-form input:focus {
+.input-box {
+    width: 100%;
+    height: 44px;
+    margin: 20px 0;
+    position: relative;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 10px 32px 10px 10px; 
+    border: none;
+    border-bottom: 1px solid #d1d1d1; 
+    background: transparent;
+    font-size: 0.85rem;
+    font-family: 'Poppins', sans-serif;
+    color: #1f170c;
+    transition: all 0.3s ease;
     outline: none;
-    border-color: #1f170c;
+}
+
+.input-box input:focus {
+    border-bottom-color: #3a2e1f; 
+}
+
+.input-box label {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    font-size: 15px;
+    color: #666;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+.input-box .icon {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    font-size: 19px;
+    color: #666;
+}
+
+.input-box input:focus ~ label,
+.input-box input:not(:placeholder-shown) ~ label {
+    top: -5px;
+    font-size: 13px;
+    color: #3a2e1f;
 }
 
 .name-row {
     display: flex;
-    flex-direction: row;
-    gap: 10px; /* space between first name and last name */
+    gap: 15px;
+}
+
+.name-row .input-box {
+    margin: 0; 
+    flex: 1;
 }
 
 .name-row input {
-    flex: 1; /* make both inputs equal width */
+    flex: 1;
+    padding: 8px 0;
+    width: 100%;
+    padding: 10px 32px 10px 10px; 
+    border: none;
+    border-bottom: 1px solid #d1d1d1; 
+    background: transparent;
+    font-size: 0.85rem;
+    font-family: 'Poppins', sans-serif;
+    color: #1f170c;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.name-row input:focus {
+    border-bottom-color: #3a2e1f;
+}
+
+input::placeholder {
+    color: transparent;
+}
+
+input:focus::placeholder {
+    color: #aaa;
 }
 
 .signup-form button {
-    margin: 25px 0px;
-    padding: 15px;
-    border: none;
-    border-radius: 999px;
-    background-color: #1f170c;
-    color: white;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.3s ease;
-    width: 100%;
-    max-width: 200px;
-    margin-left: auto;
-    margin-right: auto;
+  padding: 10px;
+  border: none;
+  background-color: #c25454;
+  color: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.1s ease;
+  width: 420px;
+  margin: 0 auto 1rem;
+  font-family: 'Poppins', sans-serif;
 }
 
 .signup-form button:hover {
-    background-color: #3a2e1f;
+  background-color: #e9c45d;
+  transform: translateY(2px);
 }
 
 .signup-form a {
-    color: #1f170c;
-    text-decoration: underline;
+    color: #c25454;
+    text-decoration: none;
     font-size: 0.9rem;
-    margin-top: 1rem;
+    position: relative;
+    padding: 0 2px;
+    transition: color 0.3s ease;
+}
+
+.signup-form a::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: #c25454;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+}
+
+.signup-form a:hover {
+    color: #c25454;
+}
+
+.signup-form a:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+.signup-form p {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
 }
 
 .messages {
@@ -186,6 +388,7 @@ html, body {
     
     .main-container {
         width: 100%;
+        position: relative;
         height: 100vh;
     }
     
@@ -213,4 +416,67 @@ html, body {
         width: 40px;
         height: 40px;
     }
+}
+
+
+/* Remove these duplicate animation classes */
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-fade-in-left {
+    animation: fadeInLeft 0.6s ease-out forwards;
+}
+
+.animate-fade-in-right {
+    animation: fadeInRight 0.6s ease-out forwards;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+}
+
+.animate-scale-in {
+    animation: scaleIn 0.5s ease-out forwards;
+}
+
+/* Layout Animations */
+.background-img {
+    animation: fadeInLeft 0.8s ease-out forwards;
+}
+
+.main-container {
+    animation: fadeInRight 0.8s ease-out forwards;
+}
+
+/* Header Animations */
+.header-logo {
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out 0.2s forwards;
+}
+
+.main-header a {
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out 0.3s forwards;
+}
+
+/* Registration Form Animations */
+.register-section h1 {
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out 0.4s forwards;
+}
+
+.register-section p {
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out 0.5s forwards;
+}
+
+.signup-form {
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out 0.6s forwards;
+}
+
+.signup-form p {
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out 0.7s forwards;
 }
