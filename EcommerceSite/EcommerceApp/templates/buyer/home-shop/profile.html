@@ -1,0 +1,112 @@
+{% extends 'buyer/home-shop/home_base.html' %}
+{% load static %}
+
+{% block title %}{{ user.username }}'s Profile{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/home-shop/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <h1><i class="fa-solid fa-camera"></i> Welcome, {{ user.username }}</h1>
+        <a href="{% url 'logout' %}" class="logout-button">Log Out</a>
+    </div>
+
+    <div class="profile-card">
+        <div class="profile-left">
+            <div class="profile-image-container">
+                {% if profile.profile_image %}
+                    <img src="{{ profile.profile_image.url }}" alt="Profile Picture" class="profile-image">
+                {% else %}
+                    <img src="{% static 'images/default-pfp.png' %}" alt="Default Profile Picture" class="profile-image">
+                {% endif %}
+            
+                <button class="edit-button" onclick="document.getElementById('fileInput').click();"><i class="fa-regular fa-pen-to-square"></i></button>
+            
+                <form method="post" enctype="multipart/form-data" class="hidden-upload-form">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input id="fileInput" type="file" name="profile_image" accept="image/*" style="display: none;" onchange="this.form.submit();">
+                </form>
+            </div>
+            
+        </div>
+        
+        
+        <div class="profile-right">
+            <p><b>First Name:</b> {{ user.first_name }}</p>
+            <p><b>Last Name:</b> {{ user.last_name }}</p>
+            <p><b>Email:</b> {{ user.email }}</p>
+            <p>Joined: {{ user.date_joined|date:"F d, Y" }}</p>
+
+        </div>
+    </div>
+
+    <div class="pending-orders">
+        <h2><i class="fa-solid fa-bag-shopping"></i> Your Orders</h2>
+        {% for order in orders %}
+            <div class="order-card">
+                <!-- Header Row -->
+                <div class="order-header">
+                    <div class="order-id"><b>Order ID:</b> {{ order.order_number }}</div>
+                    <div class="order-status">
+                        <b>Status:</b>
+                        <span class="status-label status-{{ order.status|lower }}">
+                            {{ order.get_status_display }}
+                        </span>
+                    </div>
+                </div>
+    
+                <!-- Order Date -->
+                <div class="order-date">
+                    <span><b>Order Date:</b> {{ order.created_at }}</span>
+                </div>
+                <hr>
+    
+                <!-- Product Info Row -->
+                <table class="profile-products">
+                    <thead>
+                        <tr>
+                            <th class="profile-product-image">Image</th>
+                            <th class="profile-product-name">Product</th>
+                            <th class="profile-product-price">Unit Price</th>
+                            <th class="profile-product-quantity">Quantity</th>
+                            <th class="profile-product-total">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.items.all %}
+                            <tr>
+                                <td class="profile-product-image">
+                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                                </td>
+                                <td class="profile-product-name">{{ item.product.name }}</td>
+                                <td class="profile-product-price">Php {{ item.price }}</td>
+                                <td class="profile-product-quantity">{{ item.quantity }}</td>
+                                <td class="profile-product-total">Php {{ item.get_subtotal }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            
+                <div class="order-summary">
+                    <div class="grand-total">
+                        <span>Grand Total: <b>Php {{ order.total_price }}</b></span>
+                    </div>
+                </div>
+                
+                {% if order.status == "Pending" %}
+                <div class="cancel-order">
+                    <a href="{% url 'cancel_order' order_id=order.id %}" class="cancel-button"
+                       onclick="return confirm('Are you sure you want to cancel this order?');">
+                       <i class="fa-solid fa-circle-xmark"></i> Cancel Order
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
