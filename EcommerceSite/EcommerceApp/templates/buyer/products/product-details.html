@@ -163,9 +163,12 @@
                         {% if recommended.image %}
                             <img src="{{ recommended.image.url }}" alt="{{ recommended.name }}" class="product-image">
                         {% endif %}
-                        <button class="add-to-cart-btn">
-                            <i class="fa-regular fa-square-plus"></i> Add to Cart
-                        </button>
+                        <form method="POST" action="{% url 'add_to_cart' recommended.id %}">
+                            {% csrf_token %}
+                            <button class="product-btn add-to-cart-btn">
+                                <i class="fa-regular fa-square-plus"></i> Add to Cart
+                            </button>
+                        </form>
                     </div>
                     <div class="product-info">
                         <h3 class="product-name">{{ recommended.name }}</h3>
