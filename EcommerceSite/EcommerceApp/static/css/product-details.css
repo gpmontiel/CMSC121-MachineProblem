@@ -1,52 +1,4 @@
-.header-banner {
-    background: url('../images/products-bg.png') no-repeat center center;
-    background-size: cover;
-    color: white;
-    text-align: center;
-    padding: 100px 20px;
-    margin-top: 20px;
-}
 
-.header-banner h1 {
-    font-size: 3rem;
-    font-family: 'Yeseva One', serif;
-    margin-bottom: 1rem;
-}
-
-.subtext p {
-    text-align: center;
-    font-size: 1.15rem;
-    margin-top: 30px;
-    font-family: 'Poppins', sans-serif;
-}
-
-.products-container {
-    margin-top: 10px;
-    padding: 20px 50px;
-}
-
-.filter-bar {
-    background-color: #D3CDC6;
-    padding: 20px;
-    border-radius: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 16px;
-    font-family: 'Poppins', sans-serif;
-}
-
-.filter-bar form {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.filter-bar select {
-    padding: 5px 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
 
 /* PRODUCTS CARDS */
 .products-list {
@@ -342,12 +294,16 @@
     font-size: 16px;
 }
 
-.in-stock {
+.in-stock, .out-stock, .few-stock-left  {
     position: relative;
     padding-left: 20px; 
 }
 
-.in-stock::before {
+.out-stock {
+    color: #a94442;
+}
+
+.in-stock::before, .out-stock::before, .few-stock-left::before {
     content: '';
     position: absolute;
     left: 0;
@@ -356,9 +312,19 @@
     width: 10px;
     height: 10px;
     border-radius: 50%;
+}
+
+.in-stock::before {
     background-color: green;
 }
 
+.out-stock::before {
+    background-color: red;
+}
+
+.few-stock-left::before {
+    background-color: orange;
+}
 
 .add-to-cart {
     padding: 12px;
@@ -377,6 +343,16 @@
     transform: translateY(-1px);
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     transition: all 0.2s ease;
+}
+
+.restock-info {
+    background-color: #fdecea;
+    border-left: 5px solid #f5c2c7;
+    padding: 20px 20px 20px 40px;
+    margin: 20px 0;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #842029;
 }
 
 /* BOTTOM SECTION */

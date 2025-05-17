@@ -7,6 +7,7 @@ class AccountProfile(models.Model):
     
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default='buyer')
+    profile_image = models.ImageField(null=True, blank=True, upload_to='pfp/')
 
     def __str__(self):
         return f"{self.user.username} - {self.user_type}"
@@ -55,12 +56,14 @@ class Cart(models.Model):
         return f"Cart {self.id}"
     
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
-    
+    price_at_add = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
     def get_subtotal(self):
-        return self.product.price * self.quantity
+        price = self.price_at_add if self.price_at_add is not None else self.product.price
+        return price * self.quantity
     
     def __str__(self):
         return f"{self.quantity} x {self.product.name}"

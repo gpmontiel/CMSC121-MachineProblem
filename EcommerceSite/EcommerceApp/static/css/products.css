@@ -1,5 +1,3 @@
-/* Updated CSS for products.css */
-
 a {
     text-decoration: none;
     color: inherit;
@@ -9,8 +7,8 @@ a {
     position: relative;
     color: white;
     text-align: center;
-    min-height: 70vh;
-    margin: 0; 
+    min-height: 50vh;
+    margin-top: 10px; 
     padding: 0; 
     background-image: url('../images/products-bg.png');
     background-repeat: no-repeat;
@@ -56,8 +54,8 @@ a {
 .products-page-container {
     display: flex;
     flex-direction: row;
-    gap: 30px;
-    margin: 15px 10px;
+    gap: 20px;
+    margin: 30px 50px 30px 20px;
 }
 
 /* FILTER SIDEBAR */
@@ -255,18 +253,21 @@ a {
     width: 85%;
     height: 90%;
     object-fit: cover;
+    transition: transform 0.3s ease;
 }
 
 .product-info {
     padding: 15px;
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
 }
 
 .product-text {
     display: flex;
     flex-direction: column;
-    gap: 8px; 
+    gap: 2px;
+    margin-bottom: 25px;
 }
 
 .product-name {
@@ -276,6 +277,7 @@ a {
 
 .product-price {
     font-size: 0.85rem;
+    font-weight: 700;
     color: #2a2a2a;
     margin-top: 8px;
 }
@@ -285,7 +287,7 @@ a {
     width: fit-content;
     font-size: 14px;
     color: white;
-    margin: 0; 
+    margin-top: auto; 
     background-color: #D4A34E;
     border-radius: 1rem;
     padding: 0.2rem 0.5rem;
@@ -300,6 +302,7 @@ a {
   height: 36px;
   background: #CB615C;
   border-radius: 18px;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -366,6 +369,10 @@ a {
 .product-card:hover {
   transform: translateY(-5px);
 }
+
+.product-card:hover .product-image {
+    transform: scale(1.20);
+  }
 
 /* PAGINATION */
 .pagination-container {

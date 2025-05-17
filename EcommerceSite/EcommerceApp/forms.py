@@ -61,3 +61,10 @@ class ProductForm(forms.ModelForm):
         if stock is not None and stock < 0:
             raise forms.ValidationError("Stock cannot be negative.")
         return stock
+    
+class ProfilePicForm(forms.ModelForm):
+    profile_image = forms.ImageField(label="Profile Picture")
+
+    class Meta:
+        model = AccountProfile
+        fields = ['profile_image']

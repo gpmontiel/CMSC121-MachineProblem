@@ -1,0 +1,70 @@
+{% extends 'seller/dashboard_base.html' %}
+
+{% block content %}
+<div class="stats-container">
+    <div class="stat-box sales-box">
+        <h3>Total Revenue</h3>
+        <p>Php {{ total_sales }}</p>
+    </div>
+    <div class="stat-box monthly-box">
+        <h3>Monthly Earnings</h3>
+        <p>Php {{ monthly_earnings }}</p>
+    </div>
+    <div class="stat-box orders-box">
+        <h3>Orders</h3>
+        <p>{{ total_orders }}</p>
+    </div>
+    <div class="stat-box customers-box">
+        <h3>Customers</h3>
+        <p>{{ total_customers }}</p>
+    </div>
+    <div class="stat-box products-box">
+        <h3>Products</h3>
+        <p>{{ total_products }}</p>
+    </div>
+</div>
+
+<hr>
+
+<div class="top-products-section">
+    <div class="top-products-header">
+        <h2><i class="fa-solid fa-trophy"></i> Top Selling Products</h2>
+        <a href="{% url 'seller-products' %}" class="button-actions"><i class="fa-solid fa-tags"></i> View Your Products</a>
+    </div>
+    
+    <div class="top-products-table-container">
+        <table class="top-products-table">
+            <thead>
+                <tr>
+                    <th>Orders Sold</th>
+                    <th>Image</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>In Stock</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in top_products %}
+                <tr>
+                    <td class="product-orders">{{ product.total_ordered }} sold</td>
+                    <td class="product-image">
+                        {% if product.product__image %}
+                        <img src="{{ MEDIA_URL }}{{ product.product__image }}" alt="{{ product.product__name }}">
+                        {% endif %}
+                    </td>
+                    <td class="product-name">{{ product.product__name }}</td>
+                    <td class="product-price">Php {{ product.product__price }}</td>
+                    <td class="product-stock">{{ product.product__stock }} in stock</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="no-products">No top products yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+
+{% endblock %}

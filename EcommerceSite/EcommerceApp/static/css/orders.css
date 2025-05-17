@@ -8,6 +8,34 @@
     color: #CDDAD3;
 }
 
+.orders-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-filter-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Cardo', serif;
+}
+
+.status-filter-form label {
+    font-size: 20px;
+    color: #555;
+    font-weight: 500;
+    color: #CDDAD3;
+}
+
+#status {
+    padding: 5px 10px;
+    font-size: 14px;
+    border: 2px solid #ccc;
+    border-radius: 10px; 
+    cursor: pointer;
+}
+
 .orders-container {
     font-family: 'Cardo', serif;
     max-width: 1200px;
