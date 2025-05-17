@@ -1,0 +1,155 @@
+{% extends 'home_base.html' %}
+{% load static %}
+
+{% block title %}My Cart - RetroPik{% endblock %}
+{% block extra_css %}<link rel="stylesheet" type="text/css" href="{% static 'css/cart.css' %}">{% endblock %} 
+
+{% block content %}
+<div class="container my-5 pb-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="bestseller-header">Shopping Cart</h1>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-body">
+                    {% if cart_items %}
+                        <!-- Header row -->
+                        <div class="cart-header-row">
+                            <div class="cart-header-item">Product</div>
+                            <div class="cart-header-item">Price</div>
+                            <div class="cart-header-item">Quantity</div>
+                            <div class="cart-header-item">Subtotal</div>
+                            <div class="cart-header-item">Remove</div>
+                        </div>
+
+                        <!-- Cart items -->
+                        {% for item in cart_items %}
+                        <div class="cart-item-card">
+                            <div class="cart-item-content">
+                                <div class="cart-product-info">
+                                    <div class="cart-img-container">
+                                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="cart-product-img">
+                                    </div>
+                                    <div class="ms-3">
+                                        <h6 class="mb-0 product-name">{{ item.product.name }}</h6>
+                                    </div>
+                                </div>
+                                <div class="cart-product-price text-center">
+                                    Php {{ item.product.price }}
+                                </div>
+                                <div class="cart-product-quantity text-center">
+                                    <div class="quantity-controls">
+                                            <button
+                                                class="btn btn-sm quantity-btn large-text ajax-update-btn" 
+                                                data-action="decrease" 
+                                                data-item-id="{{ item.id }}" 
+                                                aria-label="Decrease quantity">-</button>
+                                            <span class="mx-2 large-text" id="quantity-{{ item.id }}">{{ item.quantity }}</span>
+                                            <button 
+                                                class="btn btn-sm quantity-btn large-text ajax-update-btn" 
+                                                data-action="increase" 
+                                                data-item-id="{{ item.id }}" 
+                                                aria-label="Increase quantity">+</button>
+                                    </div>
+                                </div>
+                                <div class="cart-product-subtotal text-center">
+                                    Php <span id="subtotal-{{ item.id }}">{{ item.get_subtotal }}</span>
+                                </div>
+
+                                <div class="cart-product-remove text-center">
+                                    <form action="{% url 'remove_from_cart' item.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger btn-sm compact-remove" aria-label="Remove item">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-shopping-cart fa-4x mb-3" style="color: #333533;"></i>
+                            <p class="empty-text">Your cart is empty. Continue shopping!</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-family: 'Young Serif', serif; color: #1f170c;">Order Summary</h5>
+                    <hr>
+                    <div class="d-flex justify-content-between total-text">
+                        <span><strong>Total:</strong></span>
+                        <span><strong>Php <span id="cart-total">{{ total }}</span></strong></span>
+                    </div>
+                    <div class="d-grid gap-2 mt-4">
+                        {% if cart_items %}
+                            <a href="{% url 'checkout' %}" class="btn btn-lg checkout-btn">Proceed to Checkout</a>
+                        {% else %}
+                            <a href="{% url 'products' %}" class="btn btn-lg checkout-btn">Continue Shopping</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.compact-remove').forEach(button => {
+    button.addEventListener('click', function(event) {
+        if (!confirm('Are you sure you want to remove this item?')) {
+            event.preventDefault();
+        }
+    });
+});
+
+const checkoutButton = document.querySelector('button[type="submit"][form="checkout-form"]');
+if (checkoutButton) {
+    checkoutButton.addEventListener('click', function() {
+        this.disabled = true;
+        this.innerHTML = 'Processing...';
+    });
+}
+
+document.querySelectorAll('.ajax-update-btn').forEach(button => {
+    button.addEventListener('click', function () {
+        const itemId = this.dataset.itemId;
+        const action = this.dataset.action;
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        fetch(`/update-cart-item/${itemId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `action=${action}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.deleted) {
+                document.getElementById(`quantity-${itemId}`).closest('.cart-item-card').remove();
+            } else {
+                document.getElementById(`quantity-${itemId}`).innerText = data.quantity;
+                document.getElementById(`subtotal-${itemId}`).innerText = data.subtotal;
+            }
+            document.getElementById('cart-total').innerText = data.total;
+        });
+    });
+});
+
+</script>
+{% endblock %}
