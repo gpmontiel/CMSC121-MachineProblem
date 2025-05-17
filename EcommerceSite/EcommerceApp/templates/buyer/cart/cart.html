@@ -1,0 +1,355 @@
+{% extends 'buyer/home-shop/home_base.html' %}
+{% load static %}
+
+{% block title %}My Cart {% endblock %}
+{% block extra_css %}<link rel="stylesheet" type="text/css" href="{% static 'css/cart/cart.css' %}">{% endblock %} 
+
+{% block content %}
+<div class="container my-5 pb-5">
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <!-- Success Toast -->
+        <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                                {{ message }}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+        
+        <!-- Error Toast -->
+        <div id="errorToast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                                {{ message }}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+        
+        <!-- Info Toast -->
+        <div id="infoToast" class="toast align-items-center text-dark bg-light border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+                                {{ message }}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+        
+        <!-- Confirmation Toast -->
+        <div id="confirmationToast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    Are you sure you want to remove this item?
+                </div>
+                <div class="ms-auto p-2 d-flex">
+                    <button type="button" id="confirmRemoveBtn" class="btn btn-sm btn-light me-2">Yes</button>
+                    <button type="button" class="btn btn-sm btn-dark" data-bs-dismiss="toast">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="bestseller-header">Shopping Cart</h1>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-body">
+                    {% if cart_items %}
+                        <!-- Header row -->
+                        <div class="cart-header-row">
+                            <div class="cart-header-item">Product</div>
+                            <div class="cart-header-item">Price</div>
+                            <div class="cart-header-item">Quantity</div>
+                            <div class="cart-header-item">Subtotal</div>
+                            <div class="cart-header-item">Remove</div>
+                        </div>
+
+                        <!-- Cart items -->
+                        {% for item in cart_items %}
+                        <div class="cart-item-card">
+                            <div class="cart-item-content">
+                                <div class="cart-product-info">
+                                    <div class="cart-img-container">
+                                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="cart-product-img">
+                                    </div>
+                                    <div class="ms-3">
+                                        <a href="{% url 'product_detail' item.product.id %}" class="link-name"><h6 class="mb-0 product-name">{{ item.product.name }}</h6></a>
+                                    </div>
+                                </div>
+                                <div class="cart-product-price text-center">
+                                    Php {{ item.product.price }}
+                                </div>
+                                <div class="cart-product-quantity text-center">
+                                    <div class="quantity-controls">
+                                            <button
+                                                class="btn btn-sm quantity-btn large-text ajax-update-btn" 
+                                                data-action="decrease" 
+                                                data-item-id="{{ item.id }}" 
+                                                data-current-qty="{{ item.quantity }}"
+                                                aria-label="Decrease quantity">-</button>
+                                            <span class="mx-2 large-text" id="quantity-{{ item.id }}">{{ item.quantity }}</span>
+                                            <button 
+                                                class="btn btn-sm quantity-btn large-text ajax-update-btn" 
+                                                data-action="increase" 
+                                                data-item-id="{{ item.id }}" 
+                                                data-max-stock="{{ item.product.stock }}"
+                                                aria-label="Increase quantity"
+                                                {% if item.quantity >= item.product.stock %}disabled{% endif %}>+</button>
+                                    </div>
+                                </div>
+                                <div class="cart-product-subtotal text-center">
+                                    Php <span id="subtotal-{{ item.id }}" data-subtotal="{{ item.get_subtotal }}">{{ item.get_subtotal }}</span>
+                                </div>
+
+                                <div class="cart-product-remove text-center">
+                                    <form id="remove-form-{{ item.id }}" action="{% url 'remove_from_cart' item.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="button" class="btn btn-danger btn-sm compact-remove" data-item-id="{{ item.id }}" aria-label="Remove item">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-shopping-cart fa-4x mb-3" style="color: #333533;"></i>
+                            <p class="empty-text">Your cart is empty. Continue shopping!</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-family: 'Young Serif', serif; color: #1f170c;">Order Summary</h5>
+                    <hr>
+                    <div class="d-flex justify-content-between total-text">
+                        <span><strong>Total:</strong></span>
+                        <span><strong>Php <span id="cart-total">{{ total }}</span></strong></span>
+                    </div>
+                    <div class="d-grid gap-2 mt-4">
+                        {% if cart_items %}
+                            <a href="{% url 'checkout' %}" class="btn btn-lg checkout-btn">Proceed to Checkout</a>
+                        {% else %}
+                            <a href="{% url 'products' %}" class="btn btn-lg checkout-btn">Continue Shopping</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function formatNumberWithCommas(number) {
+        let numValue;
+        if (typeof number === 'string') {
+            numValue = parseFloat(number.replace(/,/g, ''));
+        } else {
+            numValue = parseFloat(number);
+        }
+        
+        if (isNaN(numValue)) {
+            return "0.00";
+        }
+        
+        return numValue.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+    
+    function getRawValue(formattedStr) {
+        if (!formattedStr) return 0;
+        return parseFloat(formattedStr.replace(/,/g, '')) || 0;
+    }
+    
+    function showToast(toastId, message = null) {
+        const toastElement = document.getElementById(toastId);
+        const toastBody = toastElement.querySelector('.toast-body');
+        
+        if (message && toastBody.textContent.trim() === '') {
+            toastBody.textContent = message;
+        }
+        
+        if (toastBody.textContent.trim() !== '') {
+            const toast = new bootstrap.Toast(toastElement, {
+                autohide: true,
+                delay: 3000
+            });
+            toast.show();
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('[id^="subtotal-"]').forEach(element => {
+            let rawValue;
+            if (element.dataset.subtotal) {
+                rawValue = element.dataset.subtotal;
+            } else {
+                rawValue = getRawValue(element.innerText);
+                element.dataset.subtotal = rawValue;
+            }
+            element.innerText = formatNumberWithCommas(rawValue);
+        });
+    
+        const cartTotal = document.getElementById('cart-total');
+        if (cartTotal) {
+            if (!cartTotal.dataset.total) {
+                cartTotal.dataset.total = getRawValue(cartTotal.innerText);
+            }
+            cartTotal.innerText = formatNumberWithCommas(cartTotal.dataset.total);
+        }
+    
+        ['successToast', 'errorToast', 'infoToast'].forEach(toastId => {
+            const toastElement = document.getElementById(toastId);
+            const toastBody = toastElement.querySelector('.toast-body');
+            if (toastBody.textContent.trim() !== '') {
+                const toast = new bootstrap.Toast(toastElement, {
+                    autohide: true,
+                    delay: 3000
+                });
+                toast.show();
+            }
+        });
+    
+        document.querySelectorAll('.compact-remove').forEach(button => {
+            button.addEventListener('click', function () {
+                const itemId = this.dataset.itemId;
+                const confirmToast = document.getElementById('confirmationToast');
+                const confirmBtn = document.getElementById('confirmRemoveBtn');
+    
+                confirmBtn.onclick = function () {
+                    document.getElementById(`remove-form-${itemId}`).submit();
+                };
+    
+                const toast = new bootstrap.Toast(confirmToast);
+                toast.show();
+            });
+        });
+    
+        const checkoutButton = document.querySelector('button[type="submit"][form="checkout-form"]');
+        if (checkoutButton) {
+            checkoutButton.addEventListener('click', function () {
+                this.disabled = true;
+                this.innerHTML = 'Processing...';
+            });
+        }
+    
+        document.querySelectorAll('.ajax-update-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const itemId = this.dataset.itemId;
+                const action = this.dataset.action;
+                const currentQty = parseInt(this.dataset.currentQty || 0);
+                const maxStock = parseInt(this.dataset.maxStock || Infinity);
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+                if (action === 'increase' && currentQty >= maxStock) {
+                    showToast('errorToast', `Maximum stock reached for this product`);
+                    return;
+                }
+    
+                if (action === 'decrease' && currentQty === 1) {
+                    const confirmToast = document.getElementById('confirmationToast');
+                    const confirmBtn = document.getElementById('confirmRemoveBtn');
+    
+                    console.log(currentQty);
+    
+                    confirmBtn.onclick = function () {
+                        document.getElementById(`remove-form-${itemId}`).submit();
+                    };
+    
+                    const toast = new bootstrap.Toast(confirmToast);
+                    toast.show();
+                    return;
+                }
+    
+                fetch(`/update-cart-item/${itemId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `action=${action}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.deleted) {
+                        document.getElementById(`quantity-${itemId}`).closest('.cart-item-card').remove();
+                        showToast('removalToast', 'Item removed from cart');
+                    } else {
+                        const qtyElement = document.getElementById(`quantity-${itemId}`);
+                        const increaseBtn = document.querySelector(`.ajax-update-btn[data-item-id="${itemId}"][data-action="increase"]`);
+                        const decreaseBtn = document.querySelector(`.ajax-update-btn[data-item-id="${itemId}"][data-action="decrease"]`);
+
+                        qtyElement.innerText = data.quantity;
+    
+                        increaseBtn.dataset.currentQty = data.quantity;
+                        decreaseBtn.dataset.currentQty = data.quantity;
+
+                        if (data.quantity >= data.max_stock) {
+                            increaseBtn.disabled = true;
+                            showToast('infoToast', `Maximum stock reached for this product`);
+                        } else {
+                            increaseBtn.disabled = false;
+                        }
+    
+                        const subtotalElement = document.getElementById(`subtotal-${itemId}`);
+                        subtotalElement.dataset.subtotal = data.subtotal;
+                        subtotalElement.innerText = formatNumberWithCommas(data.subtotal);
+    
+                        showToast('successToast', 'Cart updated successfully');
+                    }
+    
+                    if (data.total !== undefined) {
+                        const cartTotal = document.getElementById('cart-total');
+                        cartTotal.dataset.total = data.total;
+                        cartTotal.innerText = formatNumberWithCommas(data.total);
+                    } else {
+                        const cartTotal = document.getElementById('cart-total');
+                        cartTotal.dataset.total = 0;
+                        cartTotal.innerText = "0.00";
+                    }
+                })
+                .catch(error => {
+                    showToast('errorToast', 'Error updating cart');
+                    console.error('Error:', error);
+                });
+            });
+        });
+    });
+</script>    
+{% endblock %}
