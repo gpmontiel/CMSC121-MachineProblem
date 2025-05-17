@@ -1,12 +1,9 @@
 {% extends "home_base.html" %}
 {% load static %}
-
 {% block title %}{{ product.name }}{% endblock %}
-
 {% block extra_css %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/product-details.css' %}">
 {% endblock %}
-
 {% block content %}
 <div class="product-detail-container">
     <div class="product-top-section">
@@ -38,32 +35,32 @@
                   </div>
             </div>
         </div>
-
         <div class="product-info">
-            <span class="product-detail-category">{{ product.category }}</span>
-            <h1 class="product-detail-name">{{ product.name }}</h1>
-            <p class="product-detail-price" style="color: #D4A34E";>Php {{ product.price }}</p>
-
-            <div class="tax-stock">
-                <span class="tax-included">Tax included.</span>
-                <span class="in-stock">In stock</span>
+            <div class="product-info-content">
+                <span class="product-detail-category">{{ product.category }}</span>
+                <h1 class="product-detail-name">{{ product.name }}</h1>
+                <p class="product-detail-price" style="color: #1f170c";>PHP {{ product.price }}</p>
             </div>
-
-            <form method="'POST" action="{% url 'add_to_cart' product.id %}">
-                {% csrf_token %}
-                <button class="add-to-cart">Add to Cart</button>
-            </form>
+            <div class="add-to-cart-container">
+                <div class="tax-stock">
+                    <span class="tax-included">Tax included.</span>
+                    <span class="in-stock">In stock</span>
+                </div>
+                <form method="POST" action="{% url 'add_to_cart' product.id %}">
+                    {% csrf_token %}
+                    <button class="add-to-cart">Add to Cart</button>
+                </form>
+            </div>
         </div>
     </div>
-
     <div class="product-bottom-section">
-        <h2>Product Details</h2>
-
+        <div class = "details-header">
+            <h2>Product Details</h2>
+        </div>
         <div class="product-description-section">
             <h3>Description</h3>
             <p>{{ product.description }}</p>
         </div>
-
         <div class="product-features-section">
             <h3>Features</h3>
             {% if product.features %}
@@ -78,31 +75,31 @@
                 <p class="no-features">No features available.</p>
             {% endif %}
         </div>
-
         <div class="additional-info-cards">
             <div class="info-card">
-                <h2><i class="fa-solid fa-truck"></i> Delivery </h2>
+                <div class="promotion-circle"><i class="fa-solid fa-truck"></i></div>
+                <h2>Delivery </h2>
                 <p>We aim to ship your order <b>within 24 hours</b> of cleared payment (excluding weekends and holidays). 
                     You'll receive a confirmation email with tracking information, and delivery usually takes 24-48 hours. 
                     All items are insured and sent with delivery confirmation for your peace of mind.</p>
             </div>
-        
             <div class="info-card">
-                <h2><i class="fa-solid fa-shield"></i> Warranty</h2>
+                <div class="promotion-circle"><i class="fa-solid fa-shield"></i></div>
+                <h2> Warranty</h2>
                 <p>All items come with a six-month warranty, unless otherwise stated, ensuring peace of mind for your purchase. 
                     For any issues, we're here to help.</p>
                 <p>For more information, see our <a href="#">Terms and Conditions</a> page.</p>
             </div>
         
             <div class="info-card">
-                <h2><i class="fa-solid fa-parachute-box"></i> Returns</h2>
+                <div class="promotion-circle"><i class="fa-solid fa-parachute-box"></i> </div>
+                <h2>Returns</h2>
                 <p>We offer a 30-day return policy for unopened products, allowing you to return products for a full refund. 
                     Your satisfaction is our priority!</p>
                 <p>For more information on our return policy, see our <a href="#">Returns</a> page.</p>
             </div>
         </div>        
     </div>
-
     <div class="info-box">
         <hr class="link-line">
         <div class="info-items">
@@ -145,25 +142,31 @@
                 <div class="product-card">
                     <div class="product-image-container">
                         {% if recommended.image %}
-                            <img src="{{ recommended.image.url }}" alt="{{ recommended.name }}" class="product-image">
+                            <a href="{% url 'product_detail' recommended.id %}" class="product-image-link">
+                                <img src="{{ recommended.image.url }}" alt="{{ recommended.name }}" class="product-image">
+                            </a>
                         {% endif %}
-                        <button class="add-to-cart-btn">
-                            <i class="fa-regular fa-square-plus"></i> Add to Cart
-                        </button>
+                        <form method="POST" action="{% url 'add_to_cart' recommended.id %}" class="add-to-cart-form">
+                            {% csrf_token %}
+                            <div class="cart-icon-container" title="Add to cart">
+                                <i class="fas fa-shopping-cart cart-icon"></i>
+                                <span class="add-to-cart-text">Add to Cart</span>
+                            </div>
+                        </form>
                     </div>
                     <div class="product-info">
-                        <h3 class="product-name">{{ recommended.name }}</h3>
+                        <div class="product-text">
+                            <h3 class="product-name">
+                                <a href="{% url 'product_detail' recommended.id %}">{{ recommended.name }}</a>
+                            </h3>
+                            <div class="product-category">{{ recommended.category }}</div>
+                        </div>
                         <div class="product-price">Php {{ recommended.price }}</div>
-                        <div class="product-category">{{ recommended.category }}</div>
-                        <a href="{% url 'product_detail' recommended.id %}" class="view-details-btn">
-                            <span class="underline-text">View Details</span>
-                        </a>
                     </div>
                 </div>
             {% endfor %}
         </div>
     </div>
      
-
 </div>
 {% endblock %}

@@ -34,12 +34,6 @@
           <div class="header-section left">
             <ul class="header-menu">
               <li><a href="{% url 'home' %}" class="nav-link"><i class="fas fa-home nav-icon"></i><span class="nav-text">Home</span></a></li>
-              <li>
-                <a class="nav-link" data-bs-toggle="modal" data-bs-target="#searchModal">
-                  <i class="fas fa-search nav-icon"></i>
-                  <span class="nav-text">Search</span>
-                </a>
-              </li>
               <li><a href="{% url 'products' %}" class="nav-link"><i class="fas fa-camera nav-icon"></i><span class="nav-text">Products</span></a></li>
             </ul>
           </div>
@@ -53,33 +47,16 @@
 
           <div class="header-section right">
             <ul class="header-menu">
-              <li><a href="{% url 'cart' %}" class="nav-link icon-only"><span class="icon-circle"><i class="fas fa-shopping-cart"></i></span></a></li>
-              <li><a href="{% url 'login' %}" class="nav-link icon-only"><span class="icon-circle"><i class="fas fa-user"></i></span></a></li>
+              <li><a href="{% url 'search' %}" class="nav-link"><i class="fas fa-search"></i><span class="nav-text">Search</span></a></li>
+              <li><a href="{% url 'cart' %}" class="nav-link"><i class="fas fa-shopping-cart"></i><span class="nav-text">Cart</span></a></li>
+              <li><a href="{% url 'login' %}" class="nav-link"><i class="fas fa-user"></i><span class="nav-text">Login</span></a></li>
             </ul>
           </div>
         </div>
       </div>
     </nav>
 
-        <!-- Search Modal -->
-    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="searchModalLabel">Search Products</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form action="{% url 'search' %}" method="get">
-              <div class="input-group">
-                <input type="text" name="q" class="form-control" placeholder="Search...">
-                <button class="btn btn-primary" type="submit">Search</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
+    
   </header>
 
   <!-- Mobile Sidebar -->

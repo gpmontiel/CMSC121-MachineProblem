@@ -86,9 +86,6 @@ html, body {
     width: 100%;
     height: 100vh;
     flex-direction: row; 
-    opacity: 0;
-    animation: fadeIn 0.3s ease-out forwards;
-    background-color: #F9F7F3;
 }
 
 .background-img {
@@ -121,7 +118,7 @@ html, body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 4.5% 0px;
+    padding: 10px 4.5%;
 }
 
 .header-logo {

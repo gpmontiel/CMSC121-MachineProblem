@@ -59,6 +59,10 @@ header {
   justify-content: flex-end;
 }
 
+.header-section.right ul {
+  gap: 35px;
+}
+
 .header-menu,
 .sidebar-menu {
   list-style: none;
@@ -275,7 +279,7 @@ header {
   margin-left: -50vw;
   margin-right: -50vw;
   text-align: center;
-  margin-bottom: 5rem;
+  margin-bottom: 1rem;
 }
 
 .hero-image,
@@ -797,3 +801,226 @@ footer {
     width: 30%;
   }
 }
+
+.featured-products-section {
+    padding: 3rem 0;
+  }
+  
+.bestseller-header {
+  font-family: 'Yeseva One', serif;
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #333;
+  font-size: 3rem;
+}
+  
+@media (max-width: 768px) {
+  .bestseller-header {
+    font-size: 1.5rem;
+  }
+}
+
+.products-page-container {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    margin: 15px 10px;
+}
+
+.products-main-content {
+    flex: 1;
+}
+
+.products-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 12px;
+    padding: 0;
+}
+
+.product-card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.product-card {
+    background-color: white;
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-image-container {
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.product-image-container img {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+}
+
+.product-image {
+    width: 85%;
+    height: 90%;
+    object-fit: cover;
+}
+
+.add-to-cart-form {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.cart-icon-container {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 36px;
+    height: 36px;
+    background: #CB615C;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 10;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    will-change: transform, width;
+}
+
+.cart-icon {
+    color: white;
+    font-size: 14px;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 2;
+    min-width: 18px;
+    text-align: center;
+    position: absolute;
+    left: 18px;
+    transform: translateX(-50%);
+  }
+
+.cart-icon-container:hover {
+  width: 140px;
+  border-radius: 20px;
+  background: #c04a43;
+}
+
+.cart-icon-container:hover .cart-icon {
+  transform: translateX(-50%) scale(1.1);
+}
+
+.cart-icon-container:hover .add-to-cart-text {
+    opacity: 1;
+    transform: translateX(0);
+    transition-delay: 0.1s;
+}
+
+.add-to-cart-text {
+    position: absolute;
+    white-space: nowrap;
+    left: 46px;
+    color: white;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+    transform: translateX(-8px);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.cart-icon-container:active {
+    transform: scale(0.95);
+}
+
+.product-info {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-text {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.product-name {
+    font-size: 1rem;
+    margin: 0;
+}
+
+.product-category {
+    display: inline-block;
+    width: fit-content;
+    font-size: 14px;
+    color: white;
+    margin: 0;
+    background-color: #D4A34E;
+    border-radius: 1rem;
+    padding: 0.2rem 0.5rem;
+    white-space: nowrap;
+}
+
+.product-price {
+    font-size: 0.85rem;
+    color: #2a2a2a;
+    margin-top: 8px;
+}
+
+.view-all-btn-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.view-all-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 30px;
+    background-color: #c25454;
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    border-radius: none;
+    transition: all 0.3s ease;
+    border: none;
+    margin-top: 1.5rem;
+}
+
+.view-all-btn i {
+    font-size: 1rem;
+    transition: transform 0.3s ease;
+    margin: 0.5rem;
+}
+
+.view-all-btn:hover {
+    background-color: #e9c45d;
+    transform: translateY(-2px);
+}
+
+.view-all-btn:hover i {
+    transform: scale(1.1);
+}
+

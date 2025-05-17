@@ -47,9 +47,55 @@
   </div>
   
   <!-- Featured Products Section -->
-  <div class="main-bestseller">
-    <h1 class="bestseller-header">Featured Products</h1>
-  </div>
+  <section class="featured-products-section">
+    <div class="main-bestseller">
+      <h1 class="bestseller-header">Featured Products</h1>
+    </div>
+    
+    <div class="products-page-container">
+      <div class="products-main-content">
+        <div class="products-list">
+          {% for product in featured_products %}
+          <a href="{% url 'product_detail' product.id %}" class="product-card-link">
+            <div class="product-card">
+              <div class="product-image-container">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                {% endif %}
+                <form method="POST" action="{% url 'add_to_cart' product.id %}" class="add-to-cart-form">
+                  {% csrf_token %}
+                  <div class="cart-icon-container" title="Add to cart">
+                    <i class="fas fa-shopping-cart cart-icon"></i>
+                    <span class="add-to-cart-text">Add to Cart</span>
+                  </div>
+                </form>
+              </div>
+              <div class="product-info">
+                <div class="product-text">
+                  <h3 class="product-name">{{ product.name }}</h3>
+                  <div class="product-category">{{ product.category }}</div>
+                </div>
+                <div class="product-price">Php {{ product.price }}</div>
+              </div>
+            </div>
+          </a>
+          {% empty %}
+          <div class="col-12 text-center py-4">
+            <p class="text-muted"><i class="fa-regular fa-face-dizzy"></i> No featured products available.</p>
+          </div>
+          {% endfor %}
+        </div>
+        
+        {% if featured_products %}
+        <div class="view-all-btn-container text-center mt-4">
+          <a href="{% url 'products' %}" class="btn view-all-btn">
+          <i class="fas fa-camera mr-2"></i> View All Products
+            </a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
 
   <div class="promotion-container">
     <div class="row1-container">
