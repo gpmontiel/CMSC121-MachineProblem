@@ -225,7 +225,7 @@ def logout_user(request):
 
 ##----------- HOME PAGE -----------##
 def home(request):
-    all_products = list(Product.objects.filter(is_active=True))
+    all_products = list(Product.objects.filter(is_active=True, stock__gt=10))
     featured_products = random.sample(all_products, min(4, len(all_products))) if all_products else []
     
     return render(request, 'buyer/home-shop/home.html', {
@@ -533,7 +533,7 @@ def view_product_details(request, product_id):
     except CartItem.DoesNotExist:
         quantity_in_cart = 0
 
-    other_products = Product.objects.filter(is_active=True).exclude(id=product_id)
+    other_products = Product.objects.filter(is_active=True, stock__gt=10).exclude(id=product_id)
     recommended_products = random.sample(list(other_products), min(4, other_products.count()))
 
     return render(request, 'buyer/products/product-details.html', {

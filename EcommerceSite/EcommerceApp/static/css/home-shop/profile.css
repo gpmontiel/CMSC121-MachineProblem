@@ -63,7 +63,7 @@
 
 .profile-image-container {
     width: 290px;
-    height: 220px;
+    height: 250px;
     background-color: #fdd97f;
     border-radius: 50px;
     position: relative;
@@ -75,7 +75,7 @@
 
 .profile-image {
     width: 190px;
-    height: 170px;
+    height: 190px;
     border-radius: 40px;
     border-style: groove;
     object-fit: cover;
@@ -274,4 +274,133 @@ hr {
 
 .cancel-button:hover {
     background-color: #c82333;
+}
+
+@media (max-width: 1024px) {
+    .profile-card {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas: 
+            "left right"
+            "left right";
+        padding: 20px;
+    }
+
+    .profile-left {
+        grid-column: 1 / 2;
+        justify-content: flex-start;
+    }
+
+    .profile-right {
+        grid-column: 2 / 3;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .logout-button {
+        margin-top: 10px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .profile-card {
+        grid-template-columns: 1fr;
+        grid-template-areas: 
+            "left"
+            "right";
+    }
+
+    .profile-left, .profile-right {
+        grid-column: 1 / -1;
+        text-align: center;
+    }
+
+    .profile-right p {
+        text-align: center;
+    }
+
+    .order-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .profile-products thead {
+        display: none;
+    }
+
+    .profile-products tbody tr {
+        display: block;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 10px;
+        background-color: #fff;
+    }
+
+    .profile-products td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        font-size: 0.9rem;
+    }
+
+    .profile-product-image {
+        justify-content: center;
+    }
+
+    .profile-product-image img {
+        width: 70px;
+        height: 70px;
+    }
+
+    .order-summary {
+        text-align: left;
+        font-size: 1rem;
+    }
+
+    .cancel-order {
+        text-align: left;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .profile-image-container {
+        width: 220px;
+        height: 200px;
+    }
+
+    .profile-image {
+        width: 140px;
+        height: 140px;
+    }
+
+    .edit-button {
+        bottom: 10px;
+        right: 15px;
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+
+    .logout-button {
+        font-size: 0.9rem;
+        padding: 6px 15px;
+    }
+
+    .grand-total {
+        font-size: 1rem;
+    }
+
+    .pending-orders h2 {
+        font-size: 1.4rem;
+    }
 }

@@ -276,7 +276,7 @@ a {
 }
 
 .product-price {
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     font-weight: 700;
     color: #2a2a2a;
     margin-top: 8px;
@@ -294,7 +294,7 @@ a {
     white-space: nowrap;
 }
 
-.cart-icon-container {
+.icon-container {
   position: absolute;
   top: 15px;
   left: 15px;
@@ -326,7 +326,7 @@ a {
   transform: translateX(-50%);
 }
 
-.add-to-cart-text {
+.icon-button-text {
   position: absolute;
   white-space: nowrap;
   left: 46px;
@@ -341,7 +341,7 @@ a {
   text-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
-.product-card:hover .cart-icon-container {
+.product-card:hover .icon-container {
   width: 140px;
   border-radius: 20px;
   background: #c04a43;
@@ -351,15 +351,33 @@ a {
   transform: translateX(-50%) scale(1.1);
 }
 
-.product-card:hover .add-to-cart-text {
+.product-card:hover .icon-button-text {
   opacity: 1;
   transform: translateX(0);
   transition-delay: 0.1s;
   background: #c04a43;
 }
 
-.cart-icon-container:active {
+.icon-container:active {
   transform: scale(0.95);
+}
+
+.icon-container.out-of-stock {
+    background: #c04a43 ; 
+    cursor: not-allowed;
+}
+
+.product-card:hover .icon-container.out-of-stock {
+    width: 150px;
+    border-radius: 20px;
+    background: #c04379;
+}
+
+.product-card:hover .icon-container.out-of-stock .icon-button-text {
+    opacity: 1;
+    transform: translateX(0);
+    transition-delay: 0.1s;
+    background: #c04379;
 }
 
 .product-card {
@@ -372,7 +390,31 @@ a {
 
 .product-card:hover .product-image {
     transform: scale(1.20);
-  }
+}
+
+.no-available-products {
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.explore-button {
+    display: inline-block;
+    white-space: nowrap;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #D4A34E;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.explore-button:hover {
+    background-color: #b98b3f;
+}
 
 /* PAGINATION */
 .pagination-container {

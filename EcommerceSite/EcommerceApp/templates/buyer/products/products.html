@@ -78,29 +78,32 @@
                             {% if product.stock > 0 %}
                             <form method="POST" action="{% url 'add_to_cart' product.id %}" class="add-to-cart-form">
                                 {% csrf_token %}
-                                <button type="submit" class="cart-icon-container" title="Add to cart">
+                                <button type="submit" class="icon-container" title="Add to cart">
                                     <i class="fas fa-shopping-cart cart-icon"></i>
-                                    <span class="add-to-cart-text">Add to Cart</span>
+                                    <span class="icon-button-text">Add to Cart</span>
                                 </button>
                             </form>
                             {% else %}
-                            <div class="cart-icon-container" title="Add to cart">
+                            <div class="icon-container out-of-stock" title="Add to cart">
                                 <i class="fa-solid fa-heart-crack cart-icon"></i>
-                                <span class="add-to-cart-text">Out Of Stock</span>
+                                <span class="icon-button-text">Out Of Stock</span>
                             </div>
                             {% endif %}
                         </div>
                         <div class="product-info">
                             <div class="product-text">
                                 <h3 class="product-name">{{ product.name }}</h3>
-                                <div class="product-price">Php {{ product.price }}</div>
+                                <div class="product-category">{{ product.category }}</div>
                             </div>
-                            <div class="product-category">{{ product.category }}</div>
+                            <div class="product-price">Php {{ product.price }}</div>
                         </div>
                     </div>
                 </a>
                 {% empty %}
-                <p><i class="fa-regular fa-face-dizzy"></i> No products available.</p>
+                <p class="no-available-products">
+                    <i class="fa-regular fa-face-dizzy"></i> No products available.
+                    <a href="{% url 'products' %}" class="explore-button">Explore Other Products <i class="fa-solid fa-arrow-right"></i></a>
+                </p>
                 {% endfor %}
             </div>
 
