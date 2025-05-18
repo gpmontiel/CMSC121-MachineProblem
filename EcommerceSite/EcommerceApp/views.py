@@ -335,9 +335,13 @@ def checkout(request):
     total = cart.get_total()
 
     inactive_items = [item.product.name for item in cart_items if not item.product.is_active]
-    if inactive_items:
+    out_of_stock_items = [item.product.name for item in cart_items if item.product.stock <= 0]
+
+    if inactive_items or out_of_stock_items:
         for name in inactive_items:
             messages.error(request, f"Sorry, '{name}' is no longer available. Please remove them before proceeding.")
+        for name in out_of_stock_items:
+            messages.error(request, f"Sorry, '{name}' is out of stock. Please remove it before proceeding.")
         return redirect('cart')
    
     if request.method == 'POST':
