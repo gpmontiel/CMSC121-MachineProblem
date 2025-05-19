@@ -313,10 +313,10 @@ def cart(request):
 def add_to_cart(request, product_id):
     if not request.user.is_authenticated:
         return redirect('login')
-    
+
     try:
         if request.user.accountprofile.user_type != 'buyer':
-            return redirect('login') 
+            return redirect('login')
     except User.accountprofile.RelatedObjectDoesNotExist:
         return redirect('login')
 
@@ -329,9 +329,16 @@ def add_to_cart(request, product_id):
     )
 
     if not created:
-        cart_item.quantity += 1
-        cart_item.save()
-    return redirect('cart')
+        if cart_item.quantity < product.stock:
+            cart_item.quantity += 1
+            cart_item.save()
+            messages.success(request, f"{product.name} quantity updated in cart.")
+        else:
+            messages.warning(request, f"Maximum stock of {product.stock} reached for {product.name}.")
+    else:
+        messages.success(request, f"{product.name} added to cart.")
+
+    return redirect('product_detail', product_id=product.id)
 
 def update_cart_item(request, item_id):
     cart_item = get_object_or_404(CartItem, id=item_id)
@@ -573,12 +580,20 @@ def product_list(request):
     page_number = request.GET.get('page')
     page_object = paginator.get_page(page_number)
 
+    # Build cart quantities
+    cart = get_or_create_cart(request)
+    cart_quantities = {}
+    for item in cart.items.all():
+        cart_quantities[item.product.id] = item.quantity
+
     return render(request, 'buyer/products/products.html', {
         'products': page_object, 
         'categories': categories,
         'selected_category': selected_category,
         'product_count': products.count(),
-        })
+        'cart_quantities': cart_quantities,
+    })
+
 
 def view_product_details(request, product_id):
     try:

@@ -1,5 +1,6 @@
 {% extends 'buyer/home-shop/home_base.html' %}
 {% load static %}
+{% load dict_extras %}
 
 {% block title %}Our Products{% endblock %}
 
@@ -76,13 +77,22 @@
                             {% endif %}
 
                             {% if product.stock > 0 %}
-                            <form method="POST" action="{% url 'add_to_cart' product.id %}" class="add-to-cart-form">
-                                {% csrf_token %}
-                                <button type="submit" class="icon-container" title="Add to cart">
-                                    <i class="fas fa-shopping-cart cart-icon"></i>
-                                    <span class="icon-button-text">Add to Cart</span>
-                                </button>
-                            </form>
+                            {% with quantity=cart_quantities|get_item:product.id|default:0 %}
+                                {% if product.stock > 0 and quantity < product.stock %}
+                                    <form method="POST" action="{% url 'add_to_cart' product.id %}" class="add-to-cart-form">
+                                        {% csrf_token %}
+                                        <button type="submit" class="icon-container" title="Add to cart">
+                                            <i class="fas fa-shopping-cart cart-icon"></i>
+                                            <span class="icon-button-text">Add to Cart</span>
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <div class="icon-container out-of-stock" title="Max stock reached">
+                                        <i class="fa-solid fa-heart-crack cart-icon"></i>
+                                        <span class="icon-button-text">Max stock</span>
+                                    </div>
+                                {% endif %}
+                            {% endwith %}
                             {% else %}
                             <div class="icon-container out-of-stock" title="Add to cart">
                                 <i class="fa-solid fa-heart-crack cart-icon"></i>

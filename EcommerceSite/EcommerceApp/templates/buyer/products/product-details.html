@@ -5,6 +5,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/products/product-details.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 {% endblock %}
 
 {% block content %}
@@ -171,9 +172,15 @@
                         {% endif %}
                         <form method="POST" action="{% url 'add_to_cart' recommended.id %}" class="add-to-cart-form">
                             {% csrf_token %}
-                            <button type="submit" class="cart-icon-container" title="Add to cart">
-                                <i class="fas fa-shopping-cart cart-icon"></i>
-                                <span class="add-to-cart-text">Add to Cart</span>
+                            <button class="add-to-cart"
+                                {% if product.stock == 0 %}
+                                    disabled
+                                    title="Out of stock"
+                                {% elif quantity_in_cart >= product.stock %}
+                                    disabled
+                                    title="You've already added the maximum quantity"
+                                {% endif %}
+                                <i class="fa-solid fa-cart-circle-plus"></i> Add to Cart
                             </button>
                         </form>
                     </div>
@@ -192,4 +199,31 @@
     </div>
      
 </div>
+{% endblock %}
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+    toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "timeOut": "3000",
+    };
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == 'error' %}
+                toastr.error("{{ message|escapejs }}");
+            {% elif message.tags == 'warning' %}
+                toastr.warning("{{ message|escapejs }}");
+            {% elif message.tags == 'success' %}
+                toastr.success("{{ message|escapejs }}");
+            {% else %}
+                toastr.info("{{ message|escapejs }}");
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+</script>
 {% endblock %}
