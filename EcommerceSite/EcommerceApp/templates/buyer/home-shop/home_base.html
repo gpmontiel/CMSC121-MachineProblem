@@ -50,7 +50,7 @@
               <li><a href="{% url 'search' %}" class="nav-link"><i class="fas fa-search"></i><span class="nav-text">Search</span></a></li>
               <li><a href="{% url 'cart' %}" class="nav-link"><i class="fas fa-shopping-cart"></i><span class="nav-text">Cart</span></a></li>
               <li>
-                {% if request.user.is_authenticated %}
+                {% if request.user.is_authenticated and request.user.accountprofile.user_type != 'seller' %}
                   <a href="{% url 'profile' %}" class="nav-link">
                     <i class="fas fa-user"></i><span class="nav-text">Profile</span>
                   </a>

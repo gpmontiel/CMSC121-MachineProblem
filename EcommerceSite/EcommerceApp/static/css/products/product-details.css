@@ -768,6 +768,8 @@ background: #c04a43;
     font-size: 1rem;
     color: #777;
     font-style: italic;
+    padding-left: 20px;
+    padding-top: 10px;
 }
 
 @media (max-width: 1150px) {

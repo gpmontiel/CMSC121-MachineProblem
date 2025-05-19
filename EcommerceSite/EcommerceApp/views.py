@@ -22,9 +22,14 @@ def seller_login(request):
             error_message = "Please enter username and password."
         else:
             user = authenticate(request, username=username, password=password)
+
             if user is not None:
-                login(request, user)
-                return redirect('dashboard')
+                if hasattr(user, 'accountprofile') and user.accountprofile.user_type == 'seller':
+                    login(request, user)
+                    request.session['is_seller'] = True
+                    return redirect('dashboard')
+                else:
+                    error_message = "Access restricted to sellers only."
             else:
                 error_message = "Invalid username or password."
 
@@ -36,6 +41,11 @@ def seller_logout(request):
 
 @login_required
 def dashboard(request):
+    if not has_seller_access(request):
+        return redirect('home')
+    if not is_seller_logged(request):
+        return redirect('seller-login')
+    
     this_month = datetime.datetime.now().month
 
     top_products = (
@@ -59,6 +69,11 @@ def dashboard(request):
 
 @login_required
 def products_view(request):
+    if not has_seller_access(request):
+        return redirect('home')
+    if not is_seller_logged(request):
+        return redirect('seller-login')
+    
     products = Product.objects.filter(is_active=True).order_by('-created_at')
     paginator = Paginator(products, 5)
 
@@ -69,6 +84,11 @@ def products_view(request):
 
 @login_required
 def add_product(request):
+    if not has_seller_access(request):
+        return redirect('home')
+    if not is_seller_logged(request):
+        return redirect('seller-login')
+    
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
@@ -85,6 +105,11 @@ def add_product(request):
 
 @login_required
 def delete_product(request, product_id):
+    if not has_seller_access(request):
+        return redirect('home')
+    if not is_seller_logged(request):
+        return redirect('seller-login')
+    
     try:
         product = Product.objects.get(id=product_id)
     except Product.DoesNotExist:
@@ -96,6 +121,11 @@ def delete_product(request, product_id):
 
 @login_required
 def modify_product(request, product_id):
+    if not has_seller_access(request):
+        return redirect('home')
+    if not is_seller_logged(request):
+        return redirect('seller-login')
+    
     product = get_object_or_404(Product, id=product_id, is_active=True)
 
     if request.method == 'POST':
@@ -119,6 +149,11 @@ def modify_product(request, product_id):
 
 @login_required
 def delete_product_image(request, image_id):
+    if not has_seller_access(request):
+        return redirect('home')
+    if not is_seller_logged(request):
+        return redirect('seller-login')
+    
     try:
         image = ProductImage.objects.get(id=image_id)
     except ProductImage.DoesNotExist:
@@ -131,6 +166,11 @@ def delete_product_image(request, image_id):
 
 @login_required
 def order_list(request):
+    if not has_seller_access(request):
+        return redirect('home')
+    if not is_seller_logged(request):
+        return redirect('seller-login')
+    
     current_status = request.GET.get('status')
 
     if current_status:
@@ -154,6 +194,11 @@ def order_list(request):
 
 @login_required
 def order_details(request, order_id):
+    if not has_seller_access(request):
+        return redirect('home')
+    if not is_seller_logged(request):
+        return redirect('seller-login')
+    
     try:
         order = Order.objects.get(id=order_id)
     except Order.DoesNotExist:
@@ -163,6 +208,11 @@ def order_details(request, order_id):
 
 @login_required
 def update_order_status(request, order_id):
+    if not has_seller_access(request):
+        return redirect('home')
+    if not is_seller_logged(request):
+        return redirect('seller-login')
+    
     order = get_object_or_404(Order, id=order_id)
     if request.method == 'POST':
         new_status = request.POST.get('status')
@@ -171,6 +221,13 @@ def update_order_status(request, order_id):
             order.save()
 
     return redirect('order_details', order_id=order.id)
+
+def has_seller_access(request):
+    return (hasattr(request.user, 'accountprofile') and
+            request.user.accountprofile.user_type == 'seller')
+
+def is_seller_logged(request):
+    return request.session.get('is_seller')
 
 ##------------------------------- BUYER SIDE -------------------------------##
 ##----------- LOGIN/REGISTER PAGE -----------##
@@ -291,7 +348,8 @@ def update_cart_item(request, item_id):
                     'quantity': cart_item.quantity,
                     'max_stock': cart_item.product.stock,
                     'subtotal': float(cart_item.get_subtotal()),
-                    'total': float(cart_item.cart.get_total())
+                    'total': float(cart_item.cart.get_total()),
+                    'message': f"Maximum stock of {cart_item.product.stock} reached for {cart_item.product.name}"
                 })
         elif action == 'decrease':
             if cart_item.quantity > 1:
@@ -327,9 +385,6 @@ def remove_from_cart(request, item_id):
 
 @login_required
 def checkout(request):
-    """
-    Handle the checkout process with improved error handling and toast notifications
-    """
     cart = get_or_create_cart(request)
     cart_items = cart.items.all()
     total = cart.get_total()
@@ -484,7 +539,7 @@ def get_or_create_cart(request):
     
     return cart
 
-##----------- PRODUCTS PAGE -----------##
+##----------- SEARCH PAGE -----------##
 def search_view(request):
     query = request.GET.get('q')
     products = Product.objects.none()
@@ -504,6 +559,7 @@ def search_view(request):
         'page_obj': page_obj,
     })
 
+##----------- PRODUCTS PAGE -----------##
 def product_list(request):
     categories = Category.objects.all()
     selected_category = request.GET.get('category')
@@ -546,20 +602,6 @@ def view_product_details(request, product_id):
         'recommended_products': recommended_products,
         'quantity_in_cart': quantity_in_cart,
     })
-
-def product_detail(request, product_id):
-    product = get_object_or_404(Product, pk=product_id)
-
-    previous_product_id = request.GET.get('prev')
-    
-    recommended_products = Product.objects.filter(...)
-
-    context = {
-        'product': product,
-        'recommended_products': recommended_products,
-        'previous_product_id': previous_product_id,
-    }
-    return render(request, 'buyer/products/product_details.html', context)
 
 ##----------- PROFILE PAGE -----------##
 def profile(request):
