@@ -199,6 +199,8 @@
     function showToast(toastId, message = null) {
         const toastElement = document.getElementById(toastId);
         const toastBody = toastElement.querySelector('.toast-body');
+
+        toastBody.textContent = '';
         
         if (message && toastBody.textContent.trim() === '') {
             toastBody.textContent = message;

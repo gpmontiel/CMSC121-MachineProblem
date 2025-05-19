@@ -74,12 +74,13 @@
     max-width: 100%; 
 }
 
-a {
+a.link-name {
     text-decoration: none;
 }
  
-a:hover {
+a.link-name:hover {
   background-color: transparent;
+  text-decoration: underline;
   color:#1f170c;
 }
 

@@ -291,7 +291,8 @@ def update_cart_item(request, item_id):
                     'quantity': cart_item.quantity,
                     'max_stock': cart_item.product.stock,
                     'subtotal': float(cart_item.get_subtotal()),
-                    'total': float(cart_item.cart.get_total())
+                    'total': float(cart_item.cart.get_total()),
+                    'message': f"Maximum stock of {cart_item.product.stock} reached for {cart_item.product.name}"
                 })
         elif action == 'decrease':
             if cart_item.quantity > 1:
