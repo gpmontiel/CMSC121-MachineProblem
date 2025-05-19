@@ -33,31 +33,29 @@
                 <p>Check the spelling or use a different word or phrase. <i class="fa-solid fa-face-laugh-beam"></i></p>
             </div>
         {% else %}
-            <div class="products-list">
+           <div class="products-list">
                 {% for product in page_obj %}
                     <a href="{% url 'product_detail' product.id %}" class="product-card-link">
                         <div class="product-card">
                             <div class="product-image-container">
                                 <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
-                                <form method="POST" action="{% url 'add_to_cart' product.id %}" class="add-to-cart-form">
-                                    {% csrf_token %}
-                                    <div class="cart-icon-container" title="Add to cart">
-                                        <i class="fas fa-shopping-cart cart-icon"></i>
-                                        <span class="add-to-cart-text">Add to Cart</span>
-                                    </div>
-                                </form>
+                                <div class="view-product-container" title="View Product">
+                                    <i class="fas fa-eye view-product-icon"></i>
+                                    <span class="view-product-text">View Product</span>
+                                </div>
                             </div>
                             <div class="product-info">
                                 <div class="product-text">
                                     <h3 class="product-name">{{ product.name }}</h3>
                                     <div class="product-category">{{ product.category }}</div>
                                 </div>
-                                <div class="product-price">Php {{ product.price }}</div>
+                                <div class="product-price">PHP {{ product.price }}</div>
                             </div>
                         </div>
                     </a>
                 {% endfor %}
             </div>
+        </div>
 
             {% if page_obj.has_other_pages %}
             <nav aria-label="Page navigation" class="mt-4">

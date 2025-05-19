@@ -545,6 +545,21 @@ def view_product_details(request, product_id):
         'recommended_products': recommended_products,
         'quantity_in_cart': quantity_in_cart,
     })
+    
+def product_detail(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
+
+    previous_product_id = request.GET.get('prev')
+    
+    recommended_products = Product.objects.filter(...)
+
+    context = {
+        'product': product,
+        'recommended_products': recommended_products,
+        'previous_product_id': previous_product_id,
+    }
+    return render(request, 'buyer/products/product_details.html', context)
+
 
 ##----------- PROFILE PAGE -----------##
 def profile(request):

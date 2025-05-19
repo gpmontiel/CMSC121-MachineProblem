@@ -64,9 +64,9 @@
                 {% endif %}
                 <form method="POST" action="{% url 'add_to_cart' product.id %}" class="add-to-cart-form">
                   {% csrf_token %}
-                  <div class="cart-icon-container" title="Add to cart">
-                    <i class="fas fa-shopping-cart cart-icon"></i>
-                    <span class="add-to-cart-text">Add to Cart</span>
+                  <div class="icon-container" title="Add to cart">
+                    <i class="fas fa-eye cart-icon"></i>
+                    <span class="add-to-cart-text">View Product</span>
                   </div>
                 </form>
               </div>

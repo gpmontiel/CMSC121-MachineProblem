@@ -266,8 +266,9 @@ a {
 .product-text {
     display: flex;
     flex-direction: column;
-    gap: 2px;
-    margin-bottom: 25px;
+    gap: 4px;
+    text-align: left;
+    width: 100%;
 }
 
 .product-name {
@@ -329,7 +330,7 @@ a {
 .icon-button-text {
   position: absolute;
   white-space: nowrap;
-  left: 46px;
+  left: 35px;
   color: white;
   opacity: 0;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
