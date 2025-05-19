@@ -73,7 +73,6 @@ body {
     color: #c25454;
 }
 
-
 .card {
     background: white;
     border-radius: 8px;
@@ -114,7 +113,10 @@ body {
     font-family: 'Poppins', sans-serif;
     color: #1f170c;
     transition: all 0.3s ease;
-    outline: none;
+    outline: none !important;
+    box-shadow: none !important;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
 .input-box label {
@@ -126,7 +128,7 @@ body {
     pointer-events: none;
     transition: all 0.3s ease;
     font-family: 'Poppins', sans-serif;
-}
+} 
 
 .input-box input:focus ~ label,
 .input-box input:not(:placeholder-shown) ~ label {
@@ -135,12 +137,31 @@ body {
     color: #3a2e1f;
 }
 
+.input-box input:-webkit-autofill,
+.input-box input:-webkit-autofill:hover,
+.input-box input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+    box-shadow: 0 0 0px 1000px transparent inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Add this to remove any browser-specific styling */
+.input-box input:focus-visible {
+    outline: none !important;
+}
+
+.input-box input:focus {
+    outline: none;
+    box-shadow: none;
+    border-bottom: 2px solid #1f253a;
+}
+
 /* Only show validation styles after interaction */
-.was-validated .input-box input:invalid {
+.was-validated .input-box input:invalid:focus {
     border-bottom-color: #dc3545;
 }
 
-.was-validated .input-box input:valid {
+.was-validated .input-box input:valid:focus {
     border-bottom-color: #28a745;
 }
 
@@ -326,4 +347,3 @@ body {
         font-size: 1rem;
     }
 }
-

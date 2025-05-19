@@ -48,7 +48,7 @@
                     {% csrf_token %}
                     
                     <div class="input-box">
-                        <input type="text" class="form-control" id="fullName" name="Full Name" required placeholder=" ">
+                        <input type="text" class="form-control" id="fullName" name="fullName" required placeholder=" ">
                         <label for="fullName">Full Name</label>
                         <div class="invalid-feedback">Please enter your full name.</div>
                     </div>
@@ -56,14 +56,14 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <div class="input-box">
-                                <input type="email" class="form-control" id="email" name="Email" required placeholder=" ">
+                                <input type="email" class="form-control" id="email" name="email" required placeholder=" ">
                                 <label for="email">Email Address</label>
                                 <div class="invalid-feedback">Please enter a valid email address.</div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
-                                <input type="tel" class="form-control" id="phone" name="Phone" inputmode="tel" pattern="[0-9]{10}" required placeholder=" ">
+                                <input type="tel" class="form-control" id="phone" name="phone" inputmode="tel" pattern="[0-9]{10}" required placeholder=" ">
                                 <label for="phone">Phone Number</label>
                                 <div class="invalid-feedback">Please enter a valid 10-digit phone number.</div>
                             </div>
@@ -72,7 +72,7 @@
                     
                     <!-- Address field -->
                     <div class="input-box">
-                        <input type="text" class="form-control" id="address" name="Address" required placeholder=" ">
+                        <input type="text" class="form-control" id="address" name="address" required placeholder=" ">
                         <label for="address">Address</label>
                         <div class="invalid-feedback">Please enter your address.</div>
                     </div>
@@ -81,7 +81,7 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <div class="input-box">
-                                <input type="text" class="form-control" id="city" name="City" required placeholder=" ">
+                                <input type="text" class="form-control" id="city" name="city" required placeholder=" ">
                                 <label for="city">City</label>
                                 <div class="invalid-feedback">Please enter your city.</div>
                             </div>
@@ -89,7 +89,7 @@
 
                         <div class="col-md-3">
                             <div class="input-box">
-                                <input type="text" class="form-control" id="state" name="State" required placeholder=" ">
+                                <input type="text" class="form-control" id="state" name="state" required placeholder=" ">
                                 <label for="state">State</label>
                                 <div class="invalid-feedback">Please enter your state.</div>
                             </div>
@@ -97,7 +97,7 @@
 
                         <div class="col-md-3">
                             <div class="input-box">
-                                <input type="text" class="form-control" id="zipCode" name="Zip Code" inputmode="numeric" pattern="[0-9]{5}" required placeholder=" ">
+                                <input type="text" class="form-control" id="zipCode" name="zipCode" inputmode="numeric" pattern="[0-9]{5}" required placeholder=" ">
                                 <label for="zipCode">Zip Code</label>
                                 <div class="invalid-feedback">Please enter a valid 5-digit zip code.</div>
                             </div>
@@ -109,14 +109,14 @@
                     
                     <!-- Name on Card field -->
                     <div class="input-box">
-                        <input type="text" class="form-control" id="cardName" name="Card Name" required placeholder=" ">
+                        <input type="text" class="form-control" id="cardName" name="cardName" required placeholder=" ">
                         <label for="cardName">Name on Card</label>
                         <div class="invalid-feedback">Please enter the name as it appears on your card.</div>
                     </div>
                     
                     <!-- Card Number field with pattern validation for 16 digits -->
                     <div class="input-box">
-                        <input type="text" class="form-control" id="cardNumber" name="Card Number" inputmode="numeric" pattern="[0-9]{16}" required placeholder=" ">
+                        <input type="text" class="form-control" id="cardNumber" name="cardNumber" inputmode="numeric" pattern="[0-9]{16}" required placeholder=" ">
                         <label for="cardNumber">Card Number</label>
                         <div class="invalid-feedback">Please enter a valid 16-digit card number.</div>
                     </div>
@@ -125,21 +125,21 @@
                     <div class="row mb-3">
                         <div class="col-md-4">
                             <div class="input-box">
-                                <input type="text" class="form-control" id="expiryMonth" name="Expiry Month" inputmode="numeric" pattern="(0[1-9]|1[0-2])" required placeholder=" ">
+                                <input type="text" class="form-control" id="expiryMonth" name="expiryMonth" inputmode="numeric" pattern="(0[1-9]|1[0-2])" required placeholder=" ">
                                 <label for="expiryMonth">Expiry Month</label>
                                 <div class="invalid-feedback">Please enter a valid month (01-12).</div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="input-box">
-                                <input type="text" class="form-control" id="expiryYear" name="Expiry Year" inputmode="numeric" pattern="[0-9]{4}" required placeholder=" ">
+                                <input type="text" class="form-control" id="expiryYear" name="expiryYear" inputmode="numeric" pattern="[0-9]{4}" required placeholder=" ">
                                 <label for="expiryYear">Expiry Year</label>
                                 <div class="invalid-feedback">Please enter a valid 4-digit year.</div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="input-box">
-                                <input type="text" class="form-control" id="cvv" name="CVV" inputmode="numeric" pattern="[0-9]{3,4}" required placeholder=" ">
+                                <input type="text" class="form-control" id="cvv" name="cvv" inputmode="numeric" pattern="[0-9]{3,4}" required placeholder=" ">
                                 <label for="cvv">CVV</label>
                                 <div class="invalid-feedback">Please enter a valid CVV (3-4 digits).</div>
                             </div>
@@ -277,6 +277,15 @@ toastr.options = {
             field.classList.add('is-valid');
         }
     }
+
+    function formatFieldName(name) {
+        return name
+            .replace(/([a-z])([A-Z])/g, '$1 $2')
+            .replace(/_/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .replace(/^./, str => str.toUpperCase());
+    }
     
     form.addEventListener('submit', function(event) {
         if (!form.checkValidity()) {
@@ -290,9 +299,10 @@ toastr.options = {
             invalidFields.forEach(field => {
                 field.classList.add('is-invalid');
                 
-                let fieldName = field.previousElementSibling ? 
+                let rawFieldName = field.previousElementSibling ? 
                                 field.previousElementSibling.textContent : 
                                 field.getAttribute('name') || 'This field';
+                let fieldName = formatFieldName(rawFieldName);
                                 
                 let errorMessage = '';
                 if (field.validity.valueMissing) {

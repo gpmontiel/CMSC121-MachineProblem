@@ -340,6 +340,7 @@ def checkout(request):
     if inactive_items or out_of_stock_items:
         for name in inactive_items:
             messages.error(request, f"Sorry, '{name}' is no longer available. Please remove them before proceeding.")
+
         for name in out_of_stock_items:
             messages.error(request, f"Sorry, '{name}' is out of stock. Please remove it before proceeding.")
         return redirect('cart')
@@ -545,7 +546,7 @@ def view_product_details(request, product_id):
         'recommended_products': recommended_products,
         'quantity_in_cart': quantity_in_cart,
     })
-    
+
 def product_detail(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
 
@@ -559,7 +560,6 @@ def product_detail(request, product_id):
         'previous_product_id': previous_product_id,
     }
     return render(request, 'buyer/products/product_details.html', context)
-
 
 ##----------- PROFILE PAGE -----------##
 def profile(request):

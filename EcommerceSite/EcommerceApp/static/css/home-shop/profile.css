@@ -276,22 +276,28 @@ hr {
     background-color: #c82333;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 900px) {
     .profile-card {
-        grid-template-columns: 1fr 1fr;
-        grid-template-areas: 
-            "left right"
-            "left right";
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        grid-column-gap: 0;
+        grid-row-gap: 20px;
         padding: 20px;
     }
-
+    
     .profile-left {
-        grid-column: 1 / 2;
-        justify-content: flex-start;
+        grid-column: 1 / -1;
+        grid-row: 1 / 2;
+        justify-content: center;
+    }
+    
+    .profile-right {
+        grid-column: 1 / -1;
+        grid-row: 2 / 3;
     }
 
-    .profile-right {
-        grid-column: 2 / 3;
+    .profile-right p {
+        text-align: center;
     }
 }
 
@@ -304,22 +310,6 @@ hr {
     .logout-button {
         margin-top: 10px;
         width: 100%;
-        text-align: center;
-    }
-
-    .profile-card {
-        grid-template-columns: 1fr;
-        grid-template-areas: 
-            "left"
-            "right";
-    }
-
-    .profile-left, .profile-right {
-        grid-column: 1 / -1;
-        text-align: center;
-    }
-
-    .profile-right p {
         text-align: center;
     }
 

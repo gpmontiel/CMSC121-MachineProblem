@@ -95,10 +95,7 @@
                     {% endfor %}
                 </ul>
             {% else %}
-                <div class="no-features-section">
-                    <p class="no-features">No features available.</p>
-                </div>
-
+                <p class="no-features">No features available.</p>
             {% endif %}
         </div>
         <div class="additional-info-cards">
@@ -172,10 +169,13 @@
                                 <img src="{{ recommended.image.url }}" alt="{{ recommended.name }}" class="product-image">
                             </a>
                         {% endif %}
-                        <a href="{% url 'product_detail' recommended.id %}" class="cart-icon-container" title="View Product">
-                            <i class="fas fa-eye cart-icon"></i>
-                            <span class="add-to-cart-text">View Product</span>
-                        </a>
+                        <form method="POST" action="{% url 'add_to_cart' recommended.id %}" class="add-to-cart-form">
+                            {% csrf_token %}
+                            <button type="submit" class="cart-icon-container" title="Add to cart">
+                                <i class="fas fa-shopping-cart cart-icon"></i>
+                                <span class="add-to-cart-text">Add to Cart</span>
+                            </button>
+                        </form>
                     </div>
                     <div class="reco-product-info">
                         <div class="product-text">
@@ -183,7 +183,7 @@
                                 <a href="{% url 'product_detail' recommended.id %}">{{ recommended.name }}</a>
                             </h3>
                             <div class="product-category">{{ recommended.category }}</div>
-                            <div class="product-price">PHP {{ recommended.price }}</div>
+                            <div class="product-price">Php {{ recommended.price }}</div>
                         </div>
                     </div>
                 </div>

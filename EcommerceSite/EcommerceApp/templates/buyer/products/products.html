@@ -79,8 +79,8 @@
                             <form method="POST" action="{% url 'add_to_cart' product.id %}" class="add-to-cart-form">
                                 {% csrf_token %}
                                 <button type="submit" class="icon-container" title="Add to cart">
-                                    <i class="fas fa-eye cart-icon"></i>
-                                    <span class="add-to-cart-text">View Product</span>
+                                    <i class="fas fa-shopping-cart cart-icon"></i>
+                                    <span class="icon-button-text">Add to Cart</span>
                                 </button>
                             </form>
                             {% else %}
@@ -95,7 +95,7 @@
                                 <h3 class="product-name">{{ product.name }}</h3>
                                 <div class="product-category">{{ product.category }}</div>
                             </div>
-                            <div class="product-price">PHP {{ product.price }}</div>
+                            <div class="product-price">Php {{ product.price }}</div>
                         </div>
                     </div>
                 </a>
