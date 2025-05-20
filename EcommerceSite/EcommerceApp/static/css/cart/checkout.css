@@ -1,0 +1,349 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #F9F7F3;
+    color: #1f170c;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.checkout-container {
+    max-width: 1700px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+.header-container {
+    padding-left: 1rem;
+}
+
+.bestseller-header {
+    font-family: 'Yeseva One', serif;
+    font-size: 3rem;
+    color: #1f170c;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.checkout-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+    
+.return-to-cart-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #c25454;
+    font-size: 0.85rem;
+    text-decoration: none;
+    position: relative;
+    background: none;
+    border: none;
+    padding: 0;
+    transition: color 0.3s ease;
+}
+
+.return-to-cart-btn i {
+    font-size: 0.85rem;
+}
+
+.return-to-cart-btn::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    height: 1px;
+    width: 0;
+    background-color: #c25454;
+    transition: width 0.4s ease;
+}
+
+.return-to-cart-btn:hover::after {
+    width: 100%;
+}
+
+.return-to-cart-btn:hover {
+    color: #c25454;
+}
+
+.card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+    overflow: hidden;
+    width: 100%;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.card-title {
+    font-family: 'Poppins', sans-serif; 
+    font-size: 1.5rem;
+    font-weight: 600; 
+    margin-bottom: 1.5rem;
+    padding: 0.75rem 1.5rem; 
+    background-color: #c25454;
+    color: white;
+    border-radius: 50px;
+    display: inline-block; 
+}
+
+.input-box {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 0.75rem 0;
+    border: none;
+    border-bottom: 1px solid #d1d1d1;
+    background: transparent;
+    font-size: 0.9rem;
+    font-family: 'Poppins', sans-serif;
+    color: #1f170c;
+    transition: all 0.3s ease;
+    outline: none !important;
+    box-shadow: none !important;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.input-box label {
+    position: absolute;
+    top: 0.75rem;
+    left: 0;
+    font-size: 0.9rem;
+    color: #666;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+} 
+
+.input-box input:focus ~ label,
+.input-box input:not(:placeholder-shown) ~ label {
+    top: -0.5rem;
+    font-size: 0.8rem;
+    color: #3a2e1f;
+}
+
+.input-box input:-webkit-autofill,
+.input-box input:-webkit-autofill:hover,
+.input-box input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+    box-shadow: 0 0 0px 1000px transparent inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Add this to remove any browser-specific styling */
+.input-box input:focus-visible {
+    outline: none !important;
+}
+
+.input-box input:focus {
+    outline: none;
+    box-shadow: none;
+    border-bottom: 2px solid #1f253a;
+}
+
+/* Only show validation styles after interaction */
+.was-validated .input-box input:invalid:focus {
+    border-bottom-color: #dc3545;
+}
+
+.was-validated .input-box input:valid:focus {
+    border-bottom-color: #28a745;
+}
+
+.invalid-feedback {
+    display: none;
+    color: #dc3545;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+}
+
+.was-validated .invalid-feedback {
+    display: block;
+}
+
+/* Button styling */
+.btn-primary {
+    padding: 12px 24px;
+    border: none;
+    background-color: #c25454;
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+    border-radius: 4px;
+}
+
+.btn-primary:hover {
+    background-color: #e9c45d;
+}
+
+/* Order summary styles */
+.order-summary-items {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 1.5rem;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e9e9e9;
+}
+
+.order-item-details {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0; 
+}
+
+.order-item-image {
+    width: 80px; 
+    height: 80px; 
+    min-width: 80px;
+    margin-right: 1.5rem; 
+    overflow: hidden;
+    border-radius: 4px;
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+    background: #f8f9fa; 
+}
+
+.cart-product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; 
+    object-position: center;
+    max-width: 100%;
+    max-height: 100%;
+    mix-blend-mode: multiply;
+}
+
+.order-item-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .order-item-image {
+        width: 70px;
+        height: 70px;
+        min-width: 70px;
+        margin-right: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .order-item-image {
+        width: 60px;
+        height: 60px;
+        min-width: 60px;
+        margin-right: 0.75rem;
+    }
+    
+    .order-item-details {
+        align-items: flex-start;
+    }
+}
+
+
+.order-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.order-item-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.order-item-meta {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.order-item-subtotal {
+    font-weight: 500;
+}
+
+.order-pricing-summary {
+    padding: 1rem 0;
+    border-top: 1px solid #e9e9e9;
+    border-bottom: 1px solid #e9e9e9;
+    margin-bottom: 1.5rem;
+}
+
+.order-pricing-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.order-pricing-row.total {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.empty-text {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .checkout-container {
+        padding: 1rem;
+    }
+    
+    .bestseller-header {
+        font-size: 2rem;
+    }
+    .card-title {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .bestseller-header {
+        font-size: 1.75rem;
+    }
+    
+    .order-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .order-item-subtotal {
+        margin-top: 0.5rem;
+        align-self: flex-end;
+    }
+    .card-title {
+        font-size: 1rem;
+    }
+}

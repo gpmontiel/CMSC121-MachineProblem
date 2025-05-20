@@ -1,0 +1,192 @@
+{% extends 'buyer/home-shop/home_base.html' %}
+{% load static %}
+{% load dict_extras %}
+
+{% block title %}Our Products{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/products/products.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="header-banner">
+        <h1>Find Your Perfect Shot</h1>
+        <div class="subtext">
+            <p>Shop our curated collection of cameras, films, and accessories built for life's best moments.</p>
+        </div>
+    </div>
+
+    <div class="products-page-container">
+        <!-- Filter sidebar -->
+        <aside class="filter-sidebar">
+            <h3>Filters</h3>
+            
+            <!-- Mobile dropdown for categories -->
+            <div class="filter-dropdown">
+                <button class="dropdown-button">
+                    Filters <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-content">
+                    <ul class="filter-options">
+                        <li>
+                            <a href="?" class="{% if not selected_category %}active{% endif %}">All Categories</a>
+                        </li>
+                        {% for category in categories %}
+                        <li>
+                            <a href="?category={{ category.id }}" 
+                            class="{% if selected_category == category.id|stringformat:'s' %}active{% endif %}">
+                                {{ category.name }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Desktop categories list -->
+            <div class="filter-group">
+                <ul class="filter-options">
+                    <li>
+                        <a href="?" class="{% if not selected_category %}active{% endif %}">All Categories</a>
+                    </li>
+                    {% for category in categories %}
+                    <li>
+                        <a href="?category={{ category.id }}" 
+                        class="{% if selected_category == category.id|stringformat:'s' %}active{% endif %}">
+                            {{ category.name }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <div class="product-count">
+                <b>{{ product_count }}</b> product{% if product_count != 1 %}s{% endif %} found
+            </div>
+        </aside>
+        
+        <!-- Main content -->
+        <div class="products-main-content">
+            <div class="products-list">
+                {% for product in products %}
+                <a href="{% url 'product_detail' product.id %}" class="product-card-link">
+                    <div class="product-card">
+                        <div class="product-image-container">
+                            {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                            {% endif %}
+
+                            {% if product.stock > 0 %}
+                            {% with quantity=cart_quantities|get_item:product.id|default:0 %}
+                                {% if product.stock > 0 and quantity < product.stock %}
+                                    <form method="POST" action="{% url 'add_to_cart' product.id %}" class="add-to-cart-form">
+                                        {% csrf_token %}
+                                        <button type="submit" class="icon-container" title="Add to cart">
+                                            <i class="fas fa-shopping-cart cart-icon"></i>
+                                            <span class="icon-button-text">Add to Cart</span>
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <div class="icon-container out-of-stock" title="Max stock reached">
+                                        <i class="fa-solid fa-heart-crack cart-icon"></i>
+                                        <span class="icon-button-text">Max stock</span>
+                                    </div>
+                                {% endif %}
+                            {% endwith %}
+                            {% else %}
+                            <div class="icon-container out-of-stock" title="Add to cart">
+                                <i class="fa-solid fa-heart-crack cart-icon"></i>
+                                <span class="icon-button-text">Out Of Stock</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="product-info">
+                            <div class="product-text">
+                                <h3 class="product-name">{{ product.name }}</h3>
+                                <div class="product-category">{{ product.category }}</div>
+                            </div>
+                            <div class="product-price">Php {{ product.price }}</div>
+                        </div>
+                    </div>
+                </a>
+                {% empty %}
+                <p class="no-available-products">
+                    <i class="fa-regular fa-face-dizzy"></i> No products available.
+                    <a href="{% url 'products' %}" class="explore-button">Explore Other Products <i class="fa-solid fa-arrow-right"></i></a>
+                </p>
+                {% endfor %}
+            </div>
+
+            <div class="pagination-container">
+                {% if products.has_other_pages %}
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        {% if products.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?{% if selected_category %}category={{ selected_category }}&{% endif %}page={{ products.previous_page_number }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </span>
+                        </li>
+                        {% endif %}
+            
+                        {% for num in products.paginator.page_range %}
+                            {% if products.number == num %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ num }}</span>
+                                </li>
+                            {% else %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?{% if selected_category %}category={{ selected_category }}&{% endif %}page={{ num }}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+            
+                        {% if products.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?{% if selected_category %}category={{ selected_category }}&{% endif %}page={{ products.next_page_number }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </span>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dropdownButton = document.querySelector('.dropdown-button');
+    const dropdownContent = document.querySelector('.dropdown-content');
+    
+    if (dropdownButton && dropdownContent) {
+        dropdownButton.addEventListener('click', function() {
+            dropdownContent.classList.toggle('show');
+            this.classList.toggle('active');
+        });
+        
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.filter-dropdown')) {
+                dropdownContent.classList.remove('show');
+                dropdownButton.classList.remove('active');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
