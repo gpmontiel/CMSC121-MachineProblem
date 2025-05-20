@@ -18,6 +18,7 @@
     <div class="info-section">
         <div class="customer-info">
             <h3><i class="fa-regular fa-id-badge"></i> CUSTOMER</h3>
+            <p><b>Username:</b> {{ order.user.username }}</p>
             <p><b>Name:</b> {{ order.full_name }}</p>
             <p><b>Email:</b> {{ order.email }}</p>
             <p><b>Phone:</b> {{ order.phone }}</p>
@@ -32,7 +33,10 @@
         </div>
 
         <div class="status-info">
-            <h3><i class="fa-solid fa-star"></i> STATUS</h3>
+            <h3><i class="fa-solid fa-star"></i> Payment Information</h3>
+            <p><b>Payment Date:</b> {{ order.created_at }}</p>
+            <p><b>Card:</b> **** **** **** {{ order.card_last_four }}</p>
+            <p style="margin-bottom: 5px;"><b>Status:</b></p>
             <form method="post" action="{% url 'update_order_status' order.id %}">
                 {% csrf_token %}
                 <div class="status-dropdown">
